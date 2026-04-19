@@ -268,46 +268,46 @@ export default function InventoryTab({ entries, reductionRate }: InventoryTabPro
 
   if (periods.length === 0) {
     return (
-      <div className="bg-white p-12 rounded-xl shadow-[0_4px_6px_-1px_rgb(0,0,0,0.1),0_2px_4px_-2px_rgb(0,0,0,0.1)] border border-[#e2e8f0] text-center flex flex-col items-center">
-        <FileText className="w-12 h-12 text-[#64748b] mb-4" />
-        <h2 className="text-lg font-medium text-[#1e293b] mb-2">暂无出入库数据</h2>
-        <p className="text-sm text-[#64748b]">请先在「销货单录入」中添加记录</p>
+      <div className="bg-white p-12 rounded-xl shadow-md border border-slate-300 text-center flex flex-col items-center font-sans">
+        <FileText className="w-16 h-16 text-slate-400 mb-6" />
+        <h2 className="text-xl font-black text-slate-900 mb-3">暂无出入库数据</h2>
+        <p className="text-base text-slate-700 font-bold">请先在「销货单录入」中添加记录，系统将自动生成报表。</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-6 w-full">
+    <div className="flex flex-col gap-6 w-full font-sans">
       <header className="flex justify-between items-end">
         <div>
           {selectedPeriod && (
-            <span className="inline-block px-3 py-1 bg-[#dbeafe] text-[#2563eb] rounded-full text-sm font-semibold mb-1">
-              {selectedPeriod}周期
+            <span className="inline-block px-4 py-1.5 bg-blue-100 text-blue-800 rounded-full text-xs font-black mb-2 uppercase tracking-widest border border-blue-300">
+              {selectedPeriod} 生命周期
             </span>
           )}
-          <h1 className="text-[1.5rem] font-bold text-[#1e293b] leading-tight">出入库明细与对账统计</h1>
+          <h1 className="text-[1.75rem] font-black text-slate-950 leading-tight tracking-tight">出入库明细与财务对账统计</h1>
         </div>
         <div className="flex items-center space-x-4">
           <button 
             onClick={exportPaymentPlan}
-            className="flex items-center space-x-2 bg-white border border-emerald-500 px-4 py-1.5 rounded-md text-sm font-medium text-emerald-700 hover:bg-emerald-50 transition-colors shadow-sm"
+            className="flex items-center space-x-2 bg-emerald-600 border-2 border-emerald-700 px-5 py-2 rounded-md text-sm font-black text-white hover:bg-emerald-700 transition-all shadow-md active:scale-95"
           >
-            <FileText className="w-4 h-4 text-emerald-500" />
+            <FileText className="w-5 h-5 text-white" />
             <span>导出付款计划</span>
           </button>
           <button 
             onClick={exportToExcel}
-            className="flex items-center space-x-2 bg-white border border-[#e2e8f0] px-4 py-1.5 rounded-md text-sm font-medium text-[#1e293b] hover:bg-[#f8fafc] transition-colors shadow-sm"
+            className="flex items-center space-x-2 bg-white border-2 border-slate-400 px-5 py-2 rounded-md text-sm font-black text-slate-900 hover:bg-slate-50 transition-all shadow-md active:scale-95"
           >
-            <FileSpreadsheet className="w-4 h-4 text-[#2563eb]" />
-            <span>导出 Excel</span>
+            <FileSpreadsheet className="w-5 h-5 text-blue-700" />
+            <span>导出报表</span>
           </button>
           <div className="flex items-center space-x-2">
-            <label className="text-sm font-medium text-[#64748b]">选择对账周期:</label>
+            <label className="text-sm font-black text-slate-800">对账周期:</label>
             <select 
               value={selectedPeriod} 
               onChange={e => setSelectedPeriod(e.target.value)}
-              className="rounded-md border border-[#e2e8f0] px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb] bg-white font-medium"
+              className="rounded-md border-2 border-slate-400 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white font-black text-slate-900"
             >
               {periods.map(p => (
                 <option key={p} value={p}>{p}</option>
@@ -318,34 +318,34 @@ export default function InventoryTab({ entries, reductionRate }: InventoryTabPro
       </header>
 
       <section className="grid grid-cols-1 md:grid-cols-3 gap-6 shrink-0">
-        <div className="p-6 rounded-2xl bg-white shadow-sm border border-slate-200 hover:shadow-md transition-shadow group flex flex-col justify-between">
+        <div className="p-6 rounded-2xl bg-white shadow-md border-2 border-slate-300 hover:shadow-lg transition-all group flex flex-col justify-between">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-blue-50 text-blue-600 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition-colors">
-              <Package className="w-5 h-5" />
+            <div className="p-3 bg-blue-100 text-blue-700 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors border border-blue-200">
+              <Package className="w-6 h-6" />
             </div>
-            <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">本期采购总额</div>
+            <div className="text-xs font-black text-slate-600 uppercase tracking-widest">本期累计采购额</div>
           </div>
-          <div className="text-3xl font-display font-bold text-slate-900 tracking-tight">¥ {formatCurrency(totalInAmt)}</div>
+          <div className="text-3xl font-black text-slate-950 tracking-tighter">¥ {formatCurrency(totalInAmt)}</div>
         </div>
-        <div className="p-6 rounded-2xl bg-white shadow-sm border border-slate-200 hover:shadow-md transition-shadow group flex flex-col justify-between">
+        <div className="p-6 rounded-2xl bg-white shadow-md border-2 border-slate-300 hover:shadow-lg transition-all group flex flex-col justify-between">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-orange-50 text-orange-600 rounded-lg group-hover:bg-orange-600 group-hover:text-white transition-colors">
-              <TrendingUp className="w-5 h-5" />
+            <div className="p-3 bg-amber-100 text-amber-700 rounded-xl group-hover:bg-amber-600 group-hover:text-white transition-colors border border-amber-200">
+              <TrendingUp className="w-6 h-6" />
             </div>
-            <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">本期消耗总额</div>
+            <div className="text-xs font-black text-slate-600 uppercase tracking-widest">本期累计消耗额</div>
           </div>
-          <div className="text-3xl font-display font-bold text-slate-900 tracking-tight">¥ {formatCurrency(totalOutAmt)}</div>
+          <div className="text-3xl font-black text-slate-950 tracking-tighter">¥ {formatCurrency(totalOutAmt)}</div>
         </div>
-        <div className="p-6 rounded-2xl bg-gradient-to-br from-[#1e293b] to-[#0f172a] shadow-xl shadow-slate-200 border border-slate-800 text-white relative overflow-hidden group flex flex-col justify-between">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl -mr-16 -mt-16"></div>
+        <div className="p-6 rounded-2xl bg-slate-900 shadow-xl border-2 border-slate-800 text-white relative overflow-hidden group flex flex-col justify-between">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl -mr-20 -mt-20"></div>
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-white/10 text-blue-400 rounded-lg backdrop-blur-sm">
-                <FileText className="w-5 h-5" />
+              <div className="p-3 bg-white/10 text-blue-400 rounded-xl backdrop-blur-sm border border-white/10">
+                <FileText className="w-6 h-6" />
               </div>
-              <div className="text-xs font-bold text-slate-400 uppercase tracking-wider italic">开票金额 (下浮 {reductionRate}%)</div>
+              <div className="text-xs font-black text-slate-400 uppercase tracking-widest">实际应付 (下浮 {reductionRate}%)</div>
             </div>
-            <div className="text-3xl font-display font-bold text-amber-400 tracking-tight">¥ {formatCurrency(invoiceAmount)}</div>
+            <div className="text-3xl font-black text-emerald-400 tracking-tighter">¥ {formatCurrency(invoiceAmount)}</div>
           </div>
         </div>
       </section>
@@ -355,231 +355,231 @@ export default function InventoryTab({ entries, reductionRate }: InventoryTabPro
         <motion.div 
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50"
+          className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-fit"
         >
-          <div className="bg-slate-900/90 backdrop-blur-xl border border-slate-700 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] p-1 flex items-center gap-1">
+          <div className="bg-slate-950 border-2 border-slate-700 rounded-full shadow-2xl p-1.5 flex items-center gap-2">
             {isSummaryExpanded ? (
               <motion.div 
                 initial={{ width: 0, opacity: 0 }}
                 animate={{ width: 'auto', opacity: 1 }}
                 exit={{ width: 0, opacity: 0 }}
-                className="flex items-center gap-6 px-6 py-3 overflow-hidden"
+                className="flex items-center gap-8 px-8 py-3.5 overflow-hidden"
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
-                    <Package className="w-5 h-5" />
+                <div className="flex items-center gap-4">
+                  <div className="w-11 h-11 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-lg border border-blue-400">
+                    <Package className="w-6 h-6" />
                   </div>
                   <div>
-                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-1">入库总额</div>
-                    <div className="text-lg font-display font-bold text-white leading-none whitespace-nowrap">¥ {formatCurrency(totalInAmt)}</div>
+                    <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1.5">入库额</div>
+                    <div className="text-xl font-black text-white leading-none whitespace-nowrap">¥ {formatCurrency(totalInAmt)}</div>
                   </div>
                 </div>
 
-                <div className="w-px h-8 bg-slate-800"></div>
+                <div className="w-px h-10 bg-slate-800"></div>
 
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
-                    <TrendingUp className="w-5 h-5" />
+                <div className="flex items-center gap-4">
+                  <div className="w-11 h-11 bg-emerald-600 rounded-full flex items-center justify-center text-white shadow-lg border border-emerald-400">
+                    <TrendingUp className="w-6 h-6" />
                   </div>
                   <div>
-                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-1">下浮金额</div>
-                    <div className="text-lg font-display font-bold text-emerald-400 leading-none whitespace-nowrap">¥ {formatCurrency(totalInAmt - invoiceAmount)}</div>
+                    <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1.5">下浮节省</div>
+                    <div className="text-xl font-black text-emerald-400 leading-none whitespace-nowrap">¥ {formatCurrency(totalInAmt - invoiceAmount)}</div>
                   </div>
                 </div>
 
-                <div className="w-px h-8 bg-slate-800"></div>
+                <div className="w-px h-10 bg-slate-800"></div>
 
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-amber-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-amber-500/20">
-                    <DollarSign className="w-5 h-5" />
+                <div className="flex items-center gap-4">
+                  <div className="w-11 h-11 bg-amber-600 rounded-full flex items-center justify-center text-white shadow-lg border border-amber-400">
+                    <DollarSign className="w-6 h-6" />
                   </div>
                   <div>
-                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-1">应付总计</div>
-                    <div className="text-lg font-display font-bold text-amber-500 leading-none whitespace-nowrap">¥ {formatCurrency(invoiceAmount)}</div>
+                    <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1.5">结算总计</div>
+                    <div className="text-xl font-black text-amber-500 leading-none whitespace-nowrap">¥ {formatCurrency(invoiceAmount)}</div>
                   </div>
                 </div>
               </motion.div>
             ) : (
-              <div className="px-6 py-4 flex items-center gap-3">
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">数据汇总摘要</div>
-                <div className="text-sm font-bold text-white">¥ {formatCurrency(totalInAmt)}</div>
+              <div className="px-8 py-4 flex items-center gap-4">
+                <div className="text-xs font-black text-slate-400 uppercase tracking-widest">财务摘要</div>
+                <div className="text-base font-black text-white">结算 ¥ {formatCurrency(invoiceAmount)}</div>
               </div>
             )}
             
             <button 
               onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
-              className="w-12 h-12 rounded-2xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors flex items-center justify-center"
+              className="w-12 h-12 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors flex items-center justify-center border border-slate-600 shadow-inner"
             >
-              {isSummaryExpanded ? <ChevronDown className="w-5 h-5" /> : <ChevronUp className="w-5 h-5" />}
+              {isSummaryExpanded ? <ChevronDown className="w-6 h-6" /> : <ChevronUp className="w-6 h-6" />}
             </button>
           </div>
         </motion.div>
       </AnimatePresence>
 
-      <section className="bg-white rounded-xl shadow-[0_4px_6px_-1px_rgb(0,0,0,0.1),0_2px_4px_-2px_rgb(0,0,0,0.1)] border border-[#e2e8f0] flex flex-col flex-1 overflow-hidden">
-        <div className="px-5 py-4 border-b border-[#e2e8f0] flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-4">
+      <section className="bg-white rounded-xl shadow-md border-2 border-slate-300 flex flex-col flex-1 overflow-hidden min-h-[500px]">
+        <div className="px-5 py-5 border-b-2 border-slate-300 flex flex-col lg:flex-row justify-between items-center gap-6 bg-slate-100">
+          <div className="flex items-center gap-6">
             <div>
-              <h2 className="text-base font-semibold text-[#1e293b]">采购与库存统计</h2>
-              <span className="text-xs text-[#64748b]">筛选出 {viewMode === 'detail' ? rows.length : productSummaryRows.length} 项数据</span>
+              <h2 className="text-lg font-black text-slate-950">对账统计明细表</h2>
+              <span className="text-xs text-slate-800 font-bold uppercase tracking-wider">统计范围内共有 {viewMode === 'detail' ? rows.length : productSummaryRows.length} 个商品项</span>
             </div>
-            <div className="flex bg-[#f1f5f9] p-1 rounded-lg ml-4">
+            <div className="flex bg-slate-300 p-1.5 rounded-xl ml-4 shadow-inner">
               <button
                 onClick={() => setViewMode('detail')}
                 className={cn(
-                  "flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all",
-                  viewMode === 'detail' ? "bg-white text-[#2563eb] shadow-sm" : "text-[#64748b] hover:text-[#1e293b]"
+                  "flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-black transition-all",
+                  viewMode === 'detail' ? "bg-white text-blue-800 shadow-md" : "text-slate-700 hover:text-slate-950"
                 )}
               >
-                <List className="w-4 h-4" />
+                <List className="w-5 h-5" />
                 明细模式
               </button>
               <button
                 onClick={() => setViewMode('summary')}
                 className={cn(
-                  "flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all",
-                  viewMode === 'summary' ? "bg-white text-[#2563eb] shadow-sm" : "text-[#64748b] hover:text-[#1e293b]"
+                  "flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-black transition-all",
+                  viewMode === 'summary' ? "bg-white text-blue-800 shadow-md" : "text-slate-700 hover:text-slate-950"
                 )}
               >
-                <LayoutGrid className="w-4 h-4" />
+                <LayoutGrid className="w-5 h-5" />
                 汇总模式
               </button>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-4">
             <div className="relative">
-              <Search className="w-4 h-4 text-[#94a3b8] absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-5 h-5 text-slate-500 absolute left-4 top-1/2 -translate-y-1/2" />
               <input 
                 type="text" 
-                placeholder="搜索商品名称..." 
+                placeholder="搜索商品..." 
                 value={productSearch}
                 onChange={e => setProductSearch(e.target.value)}
-                className="pl-9 pr-3 py-1.5 w-48 rounded-md border border-[#e2e8f0] text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]"
+                className="pl-11 pr-4 py-2.5 w-64 rounded-xl border-2 border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 font-bold bg-white"
               />
             </div>
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-[#64748b]">筛选单位:</span>
+              <span className="text-sm font-black text-slate-800">单位:</span>
               <select 
                 value={unitFilter}
                 onChange={e => setUnitFilter(e.target.value)}
-                className="rounded-md border border-[#e2e8f0] px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb] bg-white max-w-[120px]"
+                className="rounded-xl border-2 border-slate-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white min-w-[120px] font-black"
               >
-                <option value="">全部</option>
+                <option value="">全部单位</option>
                 {uniqueUnits.map(u => <option key={u} value={u}>{u}</option>)}
               </select>
             </div>
           </div>
         </div>
         
-        <div className="overflow-auto flex-1">
+        <div className="overflow-auto flex-1 bg-white">
           {viewMode === 'summary' && highlights && (
-            <div className="px-5 py-3 bg-[#f8fafc] border-b border-[#e2e8f0] flex flex-wrap gap-4">
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-orange-50 text-orange-700 rounded-lg border border-orange-100">
-                <Trophy className="w-4 h-4" />
-                <span className="text-xs font-bold uppercase tracking-wider">采购数量最多:</span>
-                <span className="text-sm font-bold">{highlights.maxQtyProduct.productName}</span>
-                <span className="text-xs text-orange-600 bg-orange-100 px-1.5 rounded">{highlights.maxQtyProduct.inQty} {highlights.maxQtyProduct.unit}</span>
+            <div className="px-5 py-4 bg-slate-50 border-b-2 border-slate-200 flex flex-wrap gap-6">
+              <div className="flex items-center gap-3 px-4 py-2 bg-amber-100 text-amber-900 rounded-xl border-2 border-amber-300">
+                <Trophy className="w-5 h-5 text-amber-700" />
+                <span className="text-xs font-black uppercase tracking-widest">单量冠军:</span>
+                <span className="text-base font-black underline decoration-amber-400 decoration-2">{highlights.maxQtyProduct.productName}</span>
+                <span className="text-sm font-black bg-amber-200 px-2 py-0.5 rounded-md border border-amber-300">{highlights.maxQtyProduct.inQty} {highlights.maxQtyProduct.unit}</span>
               </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg border border-blue-100">
-                <DollarSign className="w-4 h-4" />
-                <span className="text-xs font-bold uppercase tracking-wider">采购金额最大:</span>
-                <span className="text-sm font-bold">{highlights.maxAmtProduct.productName}</span>
-                <span className="text-sm text-blue-600 font-extrabold">¥{highlights.maxAmtProduct.inAmt.toLocaleString()}</span>
+              <div className="flex items-center gap-3 px-4 py-2 bg-blue-100 text-blue-900 rounded-xl border-2 border-blue-300">
+                <DollarSign className="w-5 h-5 text-blue-700" />
+                <span className="text-xs font-black uppercase tracking-widest">采购金额之王:</span>
+                <span className="text-base font-black underline decoration-blue-400 decoration-2">{highlights.maxAmtProduct.productName}</span>
+                <span className="text-base font-black text-red-700 underline decoration-red-400 decoration-2">¥{highlights.maxAmtProduct.inAmt.toLocaleString()}</span>
               </div>
             </div>
           )}
 
           {viewMode === 'detail' ? (
-            <table className="w-full text-left border-collapse text-sm min-w-[1000px]">
+            <table className="w-full text-left border-collapse text-sm min-w-[1200px]">
               <thead>
-                <tr className="bg-[#f8fafc]">
-                  <th rowSpan={2} className="px-5 py-3 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] sticky top-0 bg-[#f8fafc] w-12 text-center">序号</th>
-                  <th rowSpan={2} className="px-5 py-3 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] sticky top-0 bg-[#f8fafc]">商品名称</th>
-                  <th rowSpan={2} className="px-5 py-3 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] sticky top-0 bg-[#f8fafc]">单位</th>
-                  <th colSpan={2} className="px-5 py-1.5 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] sticky top-0 bg-[#f8fafc] text-center border-l">上月结余</th>
-                  <th colSpan={3} className="px-5 py-1.5 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] sticky top-0 bg-[#f8fafc] text-center border-l">本月入库</th>
-                  <th colSpan={2} className="px-5 py-1.5 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] sticky top-0 bg-[#f8fafc] text-center border-l">本月出库</th>
-                  <th colSpan={2} className="px-5 py-1.5 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] sticky top-0 bg-[#f8fafc] text-center border-l">本月结余</th>
+                <tr className="bg-slate-200">
+                  <th rowSpan={2} className="px-5 py-4 text-xs font-black uppercase text-slate-800 border-b-2 border-slate-400 sticky top-0 bg-slate-200 w-16 text-center">序号</th>
+                  <th rowSpan={2} className="px-5 py-4 text-xs font-black uppercase text-slate-800 border-b-2 border-slate-400 sticky top-0 bg-slate-200">商品名称</th>
+                  <th rowSpan={2} className="px-5 py-4 text-xs font-black uppercase text-slate-800 border-b-2 border-slate-400 sticky top-0 bg-slate-200">单位</th>
+                  <th colSpan={2} className="px-5 py-2 text-xs font-black uppercase text-slate-800 border-b-2 border-slate-400 sticky top-0 bg-slate-200 text-center border-l-2">上月结存 (结转)</th>
+                  <th colSpan={3} className="px-5 py-2 text-xs font-black uppercase text-slate-800 border-b-2 border-slate-400 sticky top-0 bg-slate-200 text-center border-l-2">本月采购 (入库)</th>
+                  <th colSpan={2} className="px-5 py-2 text-xs font-black uppercase text-slate-800 border-b-2 border-slate-400 sticky top-0 bg-slate-200 text-center border-l-2">本月领用 (消耗)</th>
+                  <th colSpan={2} className="px-5 py-2 text-xs font-black uppercase text-slate-800 border-b-2 border-slate-400 sticky top-0 bg-slate-200 text-center border-l-2">期末库存 (余额)</th>
                 </tr>
-                <tr className="bg-[#f8fafc]">
-                  <th className="px-3 py-1.5 text-[10px] font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] text-center border-l">数量</th>
-                  <th className="px-3 py-1.5 text-[10px] font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] text-center">金额</th>
-                  <th className="px-3 py-1.5 text-[10px] font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] text-center border-l">数量</th>
-                  <th className="px-3 py-1.5 text-[10px] font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] text-center">单价</th>
-                  <th className="px-3 py-1.5 text-[10px] font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] text-center">金额</th>
-                  <th className="px-3 py-1.5 text-[10px] font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] text-center border-l">数量</th>
-                  <th className="px-3 py-1.5 text-[10px] font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] text-center">金额</th>
-                  <th className="px-3 py-1.5 text-[10px] font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] text-center border-l">数量</th>
-                  <th className="px-3 py-1.5 text-[10px] font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] text-center">金额</th>
+                <tr className="bg-slate-200">
+                  <th className="px-3 py-2 text-[11px] font-black uppercase text-slate-800 border-b-2 border-slate-400 text-center border-l-2">结余量</th>
+                  <th className="px-3 py-2 text-[11px] font-black uppercase text-slate-800 border-b-2 border-slate-400 text-center">结存金额</th>
+                  <th className="px-3 py-2 text-[11px] font-black uppercase text-slate-800 border-b-2 border-slate-400 text-center border-l-2">入库量</th>
+                  <th className="px-3 py-2 text-[11px] font-black uppercase text-slate-800 border-b-2 border-slate-400 text-center">基准价</th>
+                  <th className="px-3 py-2 text-[11px] font-black uppercase text-slate-800 border-b-2 border-slate-400 text-center">入库额</th>
+                  <th className="px-3 py-2 text-[11px] font-black uppercase text-slate-800 border-b-2 border-slate-400 text-center border-l-2">消耗量</th>
+                  <th className="px-3 py-2 text-[11px] font-black uppercase text-slate-800 border-b-2 border-slate-400 text-center">消耗额</th>
+                  <th className="px-3 py-2 text-[11px] font-black uppercase text-slate-800 border-b-2 border-slate-400 text-center border-l-2">库存量</th>
+                  <th className="px-3 py-2 text-[11px] font-black uppercase text-slate-800 border-b-2 border-slate-400 text-center">库存额</th>
                 </tr>
               </thead>
-              <tbody className="text-[#1e293b]">
+              <tbody className="text-slate-900 border-slate-200">
                 {rows.map((row, index) => (
-                  <tr key={row.id} className="hover:bg-[#f8fafc] transition-colors">
-                    <td className="px-5 py-3 border-b border-[#f1f5f9] text-center text-[#64748b]">{String(index + 1).padStart(2, '0')}</td>
-                    <td className="px-5 py-3 border-b border-[#f1f5f9] font-medium">{row.productName}</td>
-                    <td className="px-5 py-3 border-b border-[#f1f5f9] text-[#64748b]">{row.unit}</td>
+                  <tr key={row.id} className="hover:bg-slate-100 transition-colors border-b-2 border-slate-200">
+                    <td className="px-5 py-4 text-center text-slate-600 font-black">{String(index + 1).padStart(2, '0')}</td>
+                    <td className="px-5 py-4 font-black text-slate-900">{row.productName}</td>
+                    <td className="px-5 py-4 text-slate-700 font-bold">{row.unit}</td>
                     
-                    <td className="px-3 py-3 border-b border-[#f1f5f9] text-center border-l border-[#f1f5f9]">{row.prevBalanceQty.toFixed(2)}</td>
-                    <td className="px-3 py-3 border-b border-[#f1f5f9] text-right">{formatCurrency(row.prevBalanceAmt)}</td>
+                    <td className="px-3 py-4 text-center border-l-2 border-slate-200 font-bold">{row.prevBalanceQty.toFixed(2)}</td>
+                    <td className="px-3 py-4 text-right font-bold text-slate-700">{formatCurrency(row.prevBalanceAmt)}</td>
                     
-                    <td className="px-3 py-3 border-b border-[#f1f5f9] text-center border-l border-[#f1f5f9]">{row.inQty.toFixed(2)}</td>
-                    <td className="px-3 py-3 border-b border-[#f1f5f9] text-right">{formatCurrency(row.price)}</td>
-                    <td className="px-3 py-3 border-b border-[#f1f5f9] text-right font-medium">{formatCurrency(row.inAmt)}</td>
+                    <td className="px-3 py-4 text-center border-l-2 border-slate-200 font-black text-blue-800">{row.inQty.toFixed(2)}</td>
+                    <td className="px-3 py-4 text-right font-bold">{formatCurrency(row.price)}</td>
+                    <td className="px-3 py-4 text-right font-black text-blue-900">{formatCurrency(row.inAmt)}</td>
                     
-                    <td className="px-3 py-3 border-b border-[#f1f5f9] text-center border-l border-[#f1f5f9]">{row.outQty.toFixed(2)}</td>
-                    <td className="px-3 py-3 border-b border-[#f1f5f9] text-right font-medium">{formatCurrency(row.outAmt)}</td>
+                    <td className="px-3 py-4 text-center border-l-2 border-slate-200 font-black text-amber-800">{row.outQty.toFixed(2)}</td>
+                    <td className="px-3 py-4 text-right font-black text-amber-900">{formatCurrency(row.outAmt)}</td>
                     
-                    <td className="px-3 py-3 border-b border-[#f1f5f9] text-center border-l border-[#f1f5f9]">{row.balanceQty.toFixed(2)}</td>
-                    <td className="px-3 py-3 border-b border-[#f1f5f9] text-right">{formatCurrency(row.balanceAmt)}</td>
+                    <td className="px-3 py-4 text-center border-l-2 border-slate-200 font-black text-teal-800">{row.balanceQty.toFixed(2)}</td>
+                    <td className="px-3 py-4 text-right font-black text-teal-900">{formatCurrency(row.balanceAmt)}</td>
                   </tr>
                 ))}
-                <tr className="bg-[#f8fafc] font-semibold text-[#1e293b]">
-                  <td className="px-5 py-3 border-t border-[#e2e8f0] text-center" colSpan={3}>合计</td>
-                  <td className="px-3 py-3 border-t border-[#e2e8f0] text-center border-l border-[#f1f5f9]"></td>
-                  <td className="px-3 py-3 border-t border-[#e2e8f0] text-right"></td>
-                  <td className="px-3 py-3 border-t border-[#e2e8f0] text-center border-l border-[#f1f5f9]"></td>
-                  <td className="px-3 py-3 border-t border-[#e2e8f0] text-right"></td>
-                  <td className="px-3 py-3 border-t border-[#e2e8f0] text-right text-[#2563eb]">{formatCurrency(totalInAmt)}</td>
-                  <td className="px-3 py-3 border-t border-[#e2e8f0] text-center border-l border-[#f1f5f9]"></td>
-                  <td className="px-3 py-3 border-t border-[#e2e8f0] text-right text-[#2563eb]">{formatCurrency(totalOutAmt)}</td>
-                  <td className="px-3 py-3 border-t border-[#e2e8f0] text-center border-l border-[#f1f5f9]"></td>
-                  <td className="px-3 py-3 border-t border-[#e2e8f0] text-right"></td>
+                <tr className="bg-slate-100 font-black text-slate-950 border-t-2 border-slate-400">
+                  <td className="px-5 py-5 text-center text-base" colSpan={3}>全周期采购/消耗汇总合计</td>
+                  <td className="px-3 py-5 text-center border-l-2 border-slate-200"></td>
+                  <td className="px-3 py-5 text-right"></td>
+                  <td className="px-3 py-5 text-center border-l-2 border-slate-200"></td>
+                  <td className="px-3 py-5 text-right"></td>
+                  <td className="px-3 py-5 text-right text-lg text-blue-800 outline outline-2 outline-blue-200 shadow-inner px-4">{formatCurrency(totalInAmt)}</td>
+                  <td className="px-3 py-5 text-center border-l-2 border-slate-200"></td>
+                  <td className="px-3 py-5 text-right text-lg text-amber-800 outline outline-2 outline-amber-200 shadow-inner px-4">{formatCurrency(totalOutAmt)}</td>
+                  <td className="px-3 py-5 text-center border-l-2 border-slate-200"></td>
+                  <td className="px-3 py-5 text-right"></td>
                 </tr>
               </tbody>
             </table>
           ) : (
-            <table className="w-full text-left border-collapse text-sm">
+            <table className="w-full text-left border-collapse text-sm min-w-[1000px]">
               <thead>
-                <tr className="bg-[#f8fafc]">
-                  <th className="px-5 py-4 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0]">商品名称</th>
-                  <th className="px-5 py-4 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0]">单位</th>
-                  <th className="px-5 py-4 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] text-right">本期入库总量</th>
-                  <th className="px-5 py-4 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] text-right">本期入库总额</th>
-                  <th className="px-5 py-4 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] text-right">本期出库总量</th>
-                  <th className="px-5 py-4 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] text-right">本期出库总额</th>
+                <tr className="bg-slate-200">
+                  <th className="px-6 py-5 text-xs font-black uppercase text-slate-800 border-b-2 border-slate-400">商品名称 (汇总)</th>
+                  <th className="px-6 py-5 text-xs font-black uppercase text-slate-800 border-b-2 border-slate-400 w-32">单位</th>
+                  <th className="px-6 py-5 text-xs font-black uppercase text-slate-800 border-b-2 border-slate-400 text-right w-48">本期累计入库量</th>
+                  <th className="px-6 py-5 text-xs font-black uppercase text-slate-800 border-b-2 border-slate-400 text-right w-48">本期累计入库额</th>
+                  <th className="px-6 py-5 text-xs font-black uppercase text-slate-800 border-b-2 border-slate-400 text-right w-48">本期累计出库量</th>
+                  <th className="px-6 py-5 text-xs font-black uppercase text-slate-800 border-b-2 border-slate-400 text-right w-48">本期累计出库额</th>
                 </tr>
               </thead>
-              <tbody className="text-[#1e293b]">
+              <tbody className="text-slate-900">
                 {productSummaryRows.map((row, index) => (
-                  <tr key={index} className="hover:bg-[#f8fafc] transition-colors border-b border-[#f1f5f9]">
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-[#1e293b]">{row.productName}</span>
+                  <tr key={index} className="hover:bg-slate-100 transition-colors border-b-2 border-slate-200">
+                    <td className="px-6 py-5">
+                      <div className="flex items-center gap-3">
+                        <span className="font-black text-slate-950 text-base">{row.productName}</span>
                         {highlights?.maxQtyProduct.productName === row.productName && (
-                          <span className="bg-orange-100 text-orange-600 text-[10px] px-1.5 py-0.5 rounded-full font-bold">数量最高</span>
+                          <span className="bg-amber-100 text-amber-700 text-[10px] px-2 py-1 rounded-md font-black border border-amber-300">数量榜首</span>
                         )}
                         {highlights?.maxAmtProduct.productName === row.productName && (
-                          <span className="bg-blue-100 text-blue-600 text-[10px] px-1.5 py-0.5 rounded-full font-bold">金额最高</span>
+                          <span className="bg-blue-100 text-blue-700 text-[10px] px-2 py-1 rounded-md font-black border border-blue-300">货值最重</span>
                         )}
                       </div>
                     </td>
-                    <td className="px-5 py-4 text-[#64748b]">{row.unit}</td>
-                    <td className="px-5 py-4 text-right font-medium">{row.inQty.toFixed(2)}</td>
-                    <td className="px-5 py-4 text-right font-bold text-[#2563eb]">{formatCurrency(row.inAmt)}</td>
-                    <td className="px-5 py-4 text-right font-medium">{row.outQty.toFixed(2)}</td>
-                    <td className="px-5 py-4 text-right font-bold text-[#64748b]">{formatCurrency(row.outAmt)}</td>
+                    <td className="px-6 py-5 text-slate-700 font-bold">{row.unit}</td>
+                    <td className="px-6 py-5 text-right font-black text-blue-800">{row.inQty.toFixed(2)}</td>
+                    <td className="px-6 py-5 text-right font-black text-blue-900 text-base underline decoration-2 decoration-blue-200">{formatCurrency(row.inAmt)}</td>
+                    <td className="px-6 py-5 text-right font-black text-amber-800">{row.outQty.toFixed(2)}</td>
+                    <td className="px-6 py-5 text-right font-black text-amber-900">{formatCurrency(row.outAmt)}</td>
                   </tr>
                 ))}
               </tbody>

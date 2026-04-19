@@ -58,3 +58,33 @@ export interface MonthlyReport {
   annualContractTotal: number;
   lastUpdated: string;
 }
+
+export type RecipeCategory = 'staple' | 'meat' | 'vegetable' | 'soup' | 'coarse_grain' | 'breakfast' | 'lunch' | 'fruit' | 'other';
+
+export interface Recipe {
+  id: string;
+  name: string;
+  category: RecipeCategory | RecipeCategory[];
+  estimatedCost: number; // 预估单人成本
+  rating?: number; // 菜品打分 0-5
+  nutritionTags: string[]; // 营养标签: 蛋白质, 纤维, 维生素, 碳水等
+  mealTime?: ('breakfast' | 'lunch' | 'dinner')[]; // 适用的就餐时段：早、中、晚
+  ingredients: { name: string; amount: string }[];
+  description?: string;
+}
+
+export interface MenuItem {
+  recipeIds: string[]; // 一个时段可能有多个菜 (如一荤一素)
+}
+
+export interface DayMenu {
+  breakfast: MenuItem;
+  lunch: MenuItem;
+  dinner: MenuItem;
+}
+
+export interface WeeklyMenu {
+  weekId: string; // e.g., "2026-W08" or "2026-02-24" (starting date)
+  days: DayMenu[]; // 长度为 7 的数组
+  budgetPerDay: number;
+}

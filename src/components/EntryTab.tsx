@@ -60,7 +60,11 @@ export default function EntryTab({ entries, addEntry, deleteEntry, referencePric
   const [filterEndDate, setFilterEndDate] = useState('');
   const [filterVendorId, setFilterVendorId] = useState('');
 
-  const uniqueProducts = useMemo(() => Array.from(new Set(entries.map(e => e.productName))).sort(), [entries]);
+  const uniqueProducts = useMemo(() => {
+    const fromEntries = entries.map(e => e.productName);
+    const fromRef = Object.keys(referencePrices);
+    return Array.from(new Set([...fromEntries, ...fromRef])).sort();
+  }, [entries, referencePrices]);
 
   const filteredEntries = useMemo(() => {
     return [...entries].reverse().filter(entry => {
@@ -336,19 +340,19 @@ export default function EntryTab({ entries, addEntry, deleteEntry, referencePric
   };
 
   return (
-    <div className="flex flex-col gap-6 h-full">
-      <div className="bg-white rounded-xl shadow-[0_4px_6px_-1px_rgb(0,0,0,0.1),0_2px_4px_-2px_rgb(0,0,0,0.1)] border border-[#e2e8f0] flex flex-col shrink-0">
-        <div className="px-5 py-3 border-b border-[#e2e8f0] flex justify-between items-center bg-[#f8fafc] rounded-t-xl">
-          <h2 className="text-base font-semibold text-[#1e293b]">单据录入</h2>
-          <div className="flex bg-[#e2e8f0] rounded-lg p-1">
+    <div className="flex flex-col gap-6 h-full font-sans">
+      <div className="bg-white rounded-xl shadow-md border border-slate-300 flex flex-col shrink-0 overflow-hidden">
+        <div className="px-5 py-3 border-b border-slate-300 flex justify-between items-center bg-slate-100">
+          <h2 className="text-base font-bold text-slate-900">单据录入</h2>
+          <div className="flex bg-slate-200 rounded-lg p-1">
             <button 
-              className={cn("px-4 py-1.5 text-sm font-medium rounded-md transition-all", !isBulkMode ? "bg-white shadow-sm text-[#2563eb]" : "text-[#64748b] hover:text-[#1e293b]")}
+              className={cn("px-4 py-1.5 text-sm font-bold rounded-md transition-all", !isBulkMode ? "bg-white shadow-sm text-blue-700" : "text-slate-600 hover:text-slate-900")}
               onClick={() => setIsBulkMode(false)}
             >
               单条录入
             </button>
             <button 
-              className={cn("px-4 py-1.5 text-sm font-medium rounded-md transition-all", isBulkMode ? "bg-white shadow-sm text-[#2563eb]" : "text-[#64748b] hover:text-[#1e293b]")}
+              className={cn("px-4 py-1.5 text-sm font-bold rounded-md transition-all", isBulkMode ? "bg-white shadow-sm text-blue-700" : "text-slate-600 hover:text-slate-900")}
               onClick={() => setIsBulkMode(true)}
             >
               批量录入
@@ -359,92 +363,87 @@ export default function EntryTab({ entries, addEntry, deleteEntry, referencePric
         {!isBulkMode ? (
           <form onSubmit={handleSubmit} className="p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-              <label className="block text-sm font-medium text-[#1e293b] mb-1">日期 *</label>
-              <input type="date" required value={date} onChange={e => setDate(e.target.value)} className="w-full rounded-md border border-[#e2e8f0] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]" />
+              <label className="block text-sm font-bold text-slate-800 mb-1">日期 *</label>
+              <input type="date" required value={date} onChange={e => setDate(e.target.value)} className="w-full rounded-md border border-slate-400 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 font-medium" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1e293b] mb-1">供应商 *</label>
+              <label className="block text-sm font-bold text-slate-800 mb-1">供应商 *</label>
               <select 
                 value={vendorId} 
                 onChange={e => setVendorId(e.target.value)} 
-                className="w-full rounded-md border border-[#e2e8f0] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]"
+                className="w-full rounded-md border border-slate-400 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 font-bold bg-white"
               >
                 {vendors.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
                 {vendors.length === 0 && <option value="">请先添加供应商</option>}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1e293b] mb-1">商品名称 *</label>
+              <label className="block text-sm font-bold text-slate-800 mb-1">商品名称 *</label>
               <input type="text" list="product-names" required value={productName} 
                 onChange={e => {
                   setProductName(e.target.value);
                   setSingleWarningActive(false);
                 }} 
                 placeholder="如：大白菜" 
-                className={cn("w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2", 
-                  singleWarningActive ? "border-red-400 focus:ring-red-500 bg-red-50" : "border-[#e2e8f0] focus:ring-[#2563eb]"
+                className={cn("w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 font-bold", 
+                  singleWarningActive ? "border-red-500 focus:ring-red-700 bg-red-50" : "border-slate-400 focus:ring-blue-600"
                 )} 
               />
-              <datalist id="product-names">
-                {uniqueProducts.map(p => (
-                  <option key={p} value={p} />
-                ))}
-              </datalist>
             </div>
             <div className="flex space-x-2">
               <div className="flex-1">
-                <label className="block text-sm font-medium text-[#1e293b] mb-1">单位 *</label>
-                <select value={unit} onChange={e => setUnit(e.target.value)} className="w-full rounded-md border border-[#e2e8f0] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]">
+                <label className="block text-sm font-bold text-slate-800 mb-1">单位 *</label>
+                <select value={unit} onChange={e => setUnit(e.target.value)} className="w-full rounded-md border border-slate-400 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 font-bold bg-white">
                   {DEFAULT_UNITS.map(u => <option key={u} value={u}>{u}</option>)}
                   <option value="自定义">自定义...</option>
                 </select>
               </div>
               {unit === '自定义' && (
                 <div className="flex-1">
-                  <label className="block text-sm font-medium text-[#1e293b] mb-1">自定义</label>
-                  <input type="text" required value={customUnit} onChange={e => setCustomUnit(e.target.value)} className="w-full rounded-md border border-[#e2e8f0] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]" />
+                  <label className="block text-sm font-bold text-slate-800 mb-1">自定义</label>
+                  <input type="text" required value={customUnit} onChange={e => setCustomUnit(e.target.value)} className="w-full rounded-md border border-slate-400 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 font-bold" />
                 </div>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1e293b] mb-1">数量 *</label>
-              <input type="number" step="0.01" min="0" required value={quantity} onChange={e => setQuantity(e.target.value === '' ? '' : Number(e.target.value))} className="w-full rounded-md border border-[#e2e8f0] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]" />
+              <label className="block text-sm font-bold text-slate-800 mb-1">数量 *</label>
+              <input type="number" step="0.01" min="0" required value={quantity} onChange={e => setQuantity(e.target.value === '' ? '' : Number(e.target.value))} className="w-full rounded-md border border-slate-400 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 font-bold" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1e293b] mb-1">单价(元) *</label>
+              <label className="block text-sm font-bold text-slate-800 mb-1">单价(元) *</label>
               <input type="number" step="0.01" min="0" required value={price} 
                 onChange={e => {
                   setPrice(e.target.value === '' ? '' : Number(e.target.value));
                   setSingleWarningActive(false);
                 }} 
-                className={cn("w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2", 
-                  singleWarningActive ? "border-red-500 ring-1 ring-red-500 bg-red-50 text-red-600 font-bold" : "border-[#e2e8f0] focus:ring-[#2563eb]"
+                className={cn("w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 font-black", 
+                  singleWarningActive ? "border-red-600 ring-2 ring-red-600 bg-red-50 text-red-700" : "border-slate-400 focus:ring-blue-600"
                 )} 
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1e293b] mb-1">小计(元)</label>
-              <input type="text" readOnly value={formatCurrency(subtotal)} className="w-full rounded-md border border-[#e2e8f0] px-3 py-2 text-sm bg-[#f8fafc] text-[#64748b] cursor-not-allowed" />
+              <label className="block text-sm font-bold text-slate-800 mb-1">小计(元)</label>
+              <input type="text" readOnly value={formatCurrency(subtotal)} className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm bg-slate-100 text-slate-900 cursor-not-allowed font-black" />
             </div>
             <div className="lg:col-span-2">
-              <label className="block text-sm font-medium text-[#1e293b] mb-1">备注</label>
-              <input type="text" value={remarks} onChange={e => setRemarks(e.target.value)} placeholder="选填" className="w-full rounded-md border border-[#e2e8f0] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]" />
+              <label className="block text-sm font-bold text-slate-800 mb-1">备注</label>
+              <input type="text" value={remarks} onChange={e => setRemarks(e.target.value)} placeholder="选填" className="w-full rounded-md border border-slate-400 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 font-bold" />
             </div>
             <div className="lg:col-span-4 flex justify-between items-center mt-2">
               <div className="flex flex-col gap-1">
                 {productName.trim() && referencePrices[productName.trim()] !== undefined && (
-                  <div className="text-xs text-[#ef4444] flex items-center font-bold bg-red-50 px-2 py-1 rounded w-fit border border-red-100">
+                  <div className="text-xs text-red-700 flex items-center font-black bg-red-100 px-2 py-1 rounded w-fit border border-red-300">
                     已开启基准价监控，上限: {formatCurrency(referencePrices[productName.trim()])}
                   </div>
                 )}
                 {singleWarningActive ? (
-                  <div className="text-sm text-red-600 flex items-center font-bold">
+                  <div className="text-sm text-red-700 flex items-center font-black">
                     <AlertCircle className="w-4 h-4 mr-1.5" /> 录入的单价超过了该商品的市场基准价监控 ({formatCurrency(referencePrices[productName.trim()])})
                   </div>
                 ) : <div></div>}
               </div>
-              <button type="submit" className={cn("text-white px-6 py-2 rounded-md text-sm font-semibold transition-all shadow-sm shrink-0", singleWarningActive ? "bg-red-600 hover:bg-red-700 animate-pulse" : "bg-[#2563eb] hover:bg-blue-700")}>
-                {singleWarningActive ? '价格超标，再次点击确认强制录入' : '确认录入'}
+              <button type="submit" className={cn("text-white px-8 py-2.5 rounded-md text-sm font-black transition-all shadow-md shrink-0", singleWarningActive ? "bg-red-700 hover:bg-red-800 ring-4 ring-red-200" : "bg-blue-600 hover:bg-blue-700")}>
+                {singleWarningActive ? '价格严重超标，确认强制录入' : '立即保存单据'}
               </button>
             </div>
           </form>
@@ -471,9 +470,9 @@ export default function EntryTab({ entries, addEntry, deleteEntry, referencePric
               </div>
             </div>
 
-            <div className="border border-[#e2e8f0] rounded-md overflow-x-auto">
+            <div className="border border-slate-400 rounded-md overflow-x-auto">
               <table className="w-full text-left min-w-[800px]">
-                <thead className="bg-[#f8fafc] border-b border-[#e2e8f0] text-xs font-semibold text-[#64748b]">
+                <thead className="bg-slate-200 border-b border-slate-400 text-xs font-black text-slate-800">
                   <tr>
                     <th className="px-3 py-2 w-10 text-center">序号</th>
                     <th className="px-3 py-2 w-40">供应商 *</th>
@@ -494,11 +493,11 @@ export default function EntryTab({ entries, addEntry, deleteEntry, referencePric
                     const refPrice = trimmedName ? referencePrices[trimmedName] : undefined;
                     
                     return (
-                      <tr key={item.id} className={cn("border-b transition-colors", isWarning ? "bg-red-50/50 border-red-200" : "border-[#f1f5f9] hover:bg-[#f8fafc]")}>
-                        <td className="px-3 py-2 text-center text-xs text-[#94a3b8] align-top pt-3.5">{index + 1}</td>
+                      <tr key={item.id} className={cn("border-b transition-colors", isWarning ? "bg-red-100 border-red-400" : "border-slate-300 hover:bg-slate-100")}>
+                        <td className="px-3 py-2 text-center text-xs text-slate-600 align-top pt-3.5 font-black">{index + 1}</td>
                         <td className="px-3 py-2 align-top pt-2">
                           <select 
-                            className={cn("w-full rounded border px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-[#2563eb]", isWarning ? "border-red-400 bg-white" : "border-[#e2e8f0]")} 
+                            className={cn("w-full rounded border px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600 font-bold", isWarning ? "border-red-600 bg-white" : "border-slate-400 bg-white")} 
                             value={item.vendorId} 
                             onChange={e => handleBulkItemChange(index, 'vendorId', e.target.value)}
                           >
@@ -506,37 +505,37 @@ export default function EntryTab({ entries, addEntry, deleteEntry, referencePric
                           </select>
                         </td>
                         <td className="px-3 py-2 align-top pt-2">
-                          <input type="text" list="product-names" className={cn("w-full rounded border px-2 py-1 text-sm focus:outline-none focus:ring-1", isWarning ? "border-red-400 focus:ring-red-500 bg-white" : "border-[#e2e8f0] focus:ring-[#2563eb]")} value={item.productName} onChange={e => handleBulkItemChange(index, 'productName', e.target.value)} placeholder="商品" />
+                          <input type="text" list="product-names" className={cn("w-full rounded border px-2 py-1 text-sm focus:outline-none focus:ring-1 font-black", isWarning ? "border-red-600 focus:ring-red-700 bg-white" : "border-slate-400 focus:ring-blue-600")} value={item.productName} onChange={e => handleBulkItemChange(index, 'productName', e.target.value)} placeholder="商品" />
                         </td>
                         <td className="px-3 py-2 flex gap-1 align-top pt-2">
-                          <select value={item.unit} onChange={e => handleBulkItemChange(index, 'unit', e.target.value)} className={cn("w-16 rounded border px-1 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-[#2563eb]", isWarning ? "border-red-400 bg-white" : "border-[#e2e8f0]")}>
+                          <select value={item.unit} onChange={e => handleBulkItemChange(index, 'unit', e.target.value)} className={cn("w-16 rounded border px-1 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600 font-black", isWarning ? "border-red-600 bg-white" : "border-slate-400 bg-white")}>
                              {DEFAULT_UNITS.map(u => <option key={u} value={u}>{u}</option>)}
                              <option value="自定义">自定</option>
                           </select>
                           {item.unit === '自定义' && (
-                             <input type="text" className={cn("w-14 rounded border px-1 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-[#2563eb]", isWarning ? "border-red-400 bg-white" : "border-[#e2e8f0]")} value={item.customUnit} onChange={e => handleBulkItemChange(index, 'customUnit', e.target.value)} placeholder="单位" />
+                             <input type="text" className={cn("w-14 rounded border px-1 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600 font-black", isWarning ? "border-red-600 bg-white" : "border-slate-400")} value={item.customUnit} onChange={e => handleBulkItemChange(index, 'customUnit', e.target.value)} placeholder="单位" />
                           )}
                         </td>
                         <td className="px-3 py-2 align-top pt-2">
-                          <input type="number" step="0.01" min="0" className={cn("w-full rounded border px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-[#2563eb]", isWarning ? "border-red-400 bg-white" : "border-[#e2e8f0]")} value={item.quantity} onChange={e => handleBulkItemChange(index, 'quantity', e.target.value === '' ? '' : Number(e.target.value))} placeholder="0.00" />
+                          <input type="number" step="0.01" min="0" className={cn("w-full rounded border px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600 font-black", isWarning ? "border-red-600 bg-white" : "border-slate-400")} value={item.quantity} onChange={e => handleBulkItemChange(index, 'quantity', e.target.value === '' ? '' : Number(e.target.value))} placeholder="0.00" />
                         </td>
                         <td className="px-3 py-2 align-top pt-2">
-                          <input type="number" step="0.01" min="0" className={cn("w-full rounded border px-2 py-1 text-sm focus:outline-none focus:ring-1", isWarning ? "border-red-500 ring-1 ring-red-500 bg-red-50 text-red-600 font-bold" : "border-[#e2e8f0] focus:ring-[#2563eb]")} value={item.price} onChange={e => handleBulkItemChange(index, 'price', e.target.value === '' ? '' : Number(e.target.value))} placeholder="0.00" />
+                          <input type="number" step="0.01" min="0" className={cn("w-full rounded border px-2 py-1 text-sm focus:outline-none focus:ring-1 font-black", isWarning ? "border-red-700 ring-2 ring-red-700 bg-red-100 text-red-800" : "border-slate-400 focus:ring-blue-600")} value={item.price} onChange={e => handleBulkItemChange(index, 'price', e.target.value === '' ? '' : Number(e.target.value))} placeholder="0.00" />
                           {refPrice !== undefined && (
-                            <div className="text-[11px] mt-1 whitespace-nowrap font-bold text-[#ef4444]">
+                            <div className="text-[11px] mt-1 whitespace-nowrap font-black text-red-700">
                               监控上限: {formatCurrency(refPrice)}
                             </div>
                           )}
                         </td>
                         <td className="px-3 py-2 align-top pt-2">
-                          <input type="text" readOnly className="w-full rounded border border-[#e2e8f0] px-2 py-1 text-sm bg-white/50 text-[#64748b] cursor-not-allowed" value={formatCurrency(itemSubtotal)} />
+                          <input type="text" readOnly className="w-full rounded border border-slate-300 px-2 py-1 text-sm bg-slate-100 text-slate-900 cursor-not-allowed font-black" value={formatCurrency(itemSubtotal)} />
                         </td>
                         <td className="px-3 py-2 align-top pt-2">
-                          <input type="text" className={cn("w-full rounded border px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-[#2563eb]", isWarning ? "border-red-400 bg-white" : "border-[#e2e8f0]")} value={item.remarks} onChange={e => handleBulkItemChange(index, 'remarks', e.target.value)} placeholder="选填" />
+                          <input type="text" className={cn("w-full rounded border px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600 font-bold", isWarning ? "border-red-600 bg-white" : "border-slate-400")} value={item.remarks} onChange={e => handleBulkItemChange(index, 'remarks', e.target.value)} placeholder="选填" />
                         </td>
                         <td className="px-3 py-2 text-center flex items-center justify-center align-top pt-2">
-                          <button onClick={() => removeBulkItem(index)} disabled={bulkItems.length === 1} className={cn("p-1.5 rounded transition-colors mt-0.5", bulkItems.length === 1 ? "text-[#cbd5e1] cursor-not-allowed" : "text-[#ef4444] hover:bg-red-50")}>
-                             <Trash2 className="w-4 h-4" />
+                          <button onClick={() => removeBulkItem(index)} disabled={bulkItems.length === 1} className={cn("p-2 rounded transition-colors mt-0.5", bulkItems.length === 1 ? "text-slate-300 cursor-not-allowed" : "text-red-700 hover:bg-red-100")}>
+                             <Trash2 className="w-5 h-5" />
                           </button>
                         </td>
                       </tr>
@@ -553,23 +552,23 @@ export default function EntryTab({ entries, addEntry, deleteEntry, referencePric
             
             <div className="flex justify-between items-center mt-2">
               <div className="flex items-center gap-6">
-                <button type="button" onClick={() => setBulkItems([...bulkItems, createEmptyBulkItem(vendors.find(v => v.isPreferred)?.id || (vendors[0]?.id) || '')])} className="flex items-center gap-1 text-[#2563eb] text-sm font-medium hover:text-blue-800 transition-colors">
-                  <Plus className="w-4 h-4" /> 增加一行
+                <button type="button" onClick={() => setBulkItems([...bulkItems, createEmptyBulkItem(vendors.find(v => v.isPreferred)?.id || (vendors[0]?.id) || '')])} className="flex items-center gap-1 text-blue-800 text-sm font-black hover:text-blue-900 transition-colors uppercase tracking-wider">
+                  <Plus className="w-5 h-5" /> 增加一行
                 </button>
                 {currentBulkTotal > 0 && (
-                  <div className="text-sm text-[#64748b] font-medium bg-[#f8fafc] px-3 py-1.5 rounded-md border border-[#e2e8f0]">
-                    本次导入/编辑合计: <span className="text-[#ef4444] font-bold text-base ml-1">{formatCurrency(currentBulkTotal)}</span>
+                  <div className="text-sm text-slate-900 font-black bg-slate-200 px-4 py-2 rounded-md border-2 border-slate-400">
+                    本单小计: <span className="text-red-700 text-lg ml-2">{formatCurrency(currentBulkTotal)}</span>
                   </div>
                 )}
               </div>
               <div className="flex items-center gap-4">
                 {bulkWarningActive && (
-                  <div className="text-sm text-red-600 flex items-center font-medium">
-                    <AlertCircle className="w-4 h-4 mr-1.5" /> 部分行输入价格大于监控基准价
+                  <div className="text-sm text-red-700 flex items-center font-black animate-bounce">
+                    <AlertCircle className="w-5 h-5 mr-1.5" /> ⚠️ 部分商品价格异常
                   </div>
                 )}
-                <button onClick={handleBulkSubmit} className={cn("text-white px-6 py-2 rounded-md text-sm font-semibold transition-all shadow-sm", bulkWarningActive ? "bg-red-600 hover:bg-red-700 animate-pulse" : "bg-[#2563eb] hover:bg-blue-700")}>
-                  {bulkWarningActive ? `存在价格异常，再次点击强制提交 (${bulkItems.length}条)` : `批量提交录入 ${bulkItems.length > 1 ? `(${bulkItems.length}条)` : ''}`}
+                <button onClick={handleBulkSubmit} className={cn("text-white px-8 py-3 rounded-md text-sm font-black transition-all shadow-lg active:scale-95", bulkWarningActive ? "bg-red-700 hover:bg-red-800 ring-4 ring-red-200" : "bg-blue-600 hover:bg-blue-700")}>
+                  {bulkWarningActive ? `价格超标，再次点击强制提交 (${bulkItems.length}笔)` : `保存批量录入记录 (${bulkItems.length}笔)`}
                 </button>
               </div>
             </div>
@@ -577,16 +576,16 @@ export default function EntryTab({ entries, addEntry, deleteEntry, referencePric
         )}
       </div>
 
-      <div className="bg-white rounded-xl shadow-[0_4px_6px_-1px_rgb(0,0,0,0.1),0_2px_4px_-2px_rgb(0,0,0,0.1)] border border-[#e2e8f0] flex flex-col flex-1 overflow-hidden">
-        <div className="px-5 py-4 border-b border-[#e2e8f0] flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+      <div className="bg-white rounded-xl shadow-md border border-slate-300 flex flex-col flex-1 overflow-hidden">
+        <div className="px-5 py-4 border-b border-slate-300 flex flex-col md:flex-row md:justify-between md:items-center gap-4 bg-slate-100">
           <div className="flex flex-col gap-1">
-            <h2 className="text-base font-semibold text-[#1e293b] flex items-center gap-2">最新录入记录</h2>
-            <div className="flex flex-wrap items-center text-xs text-[#64748b] gap-2">
+            <h2 className="text-base font-black text-slate-900 flex items-center gap-2">最新录入记录</h2>
+            <div className="flex flex-wrap items-center text-xs text-slate-700 gap-2 font-bold">
               <span>筛选出 {filteredEntries.length} 条 (总共 {entries.length} 条)</span>
               {filteredEntries.length > 0 && (
                 <>
-                  <span className="text-[#cbd5e1]">|</span>
-                  <span className="font-medium">筛选共计消费: <span className="text-[#ef4444] text-sm">{formatCurrency(filteredTotalAmount)}</span></span>
+                  <span className="text-slate-400">|</span>
+                  <span className="font-black">筛选共计消费: <span className="text-red-700 text-sm">{formatCurrency(filteredTotalAmount)}</span></span>
                 </>
               )}
             </div>
@@ -594,11 +593,11 @@ export default function EntryTab({ entries, addEntry, deleteEntry, referencePric
           
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-[#64748b]">供应商:</span>
+              <span className="text-sm font-black text-slate-800">供应商:</span>
               <select 
                 value={filterVendorId} 
                 onChange={e => setFilterVendorId(e.target.value)}
-                className="rounded-md border border-[#e2e8f0] px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb] max-w-[150px]"
+                className="rounded-md border border-slate-400 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 max-w-[150px] font-bold bg-white"
               >
                 <option value="">全部供应商</option>
                 {vendors.map(v => (
@@ -608,27 +607,27 @@ export default function EntryTab({ entries, addEntry, deleteEntry, referencePric
             </div>
 
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-[#64748b]">日期筛选:</span>
+              <span className="text-sm font-black text-slate-800">日期筛选:</span>
               <input 
                 type="date" 
                 value={filterStartDate} 
                 onChange={e => setFilterStartDate(e.target.value)}
-                className="rounded-md border border-[#e2e8f0] px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]" 
+                className="rounded-md border border-slate-400 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 font-bold" 
               />
-              <span className="text-sm text-[#64748b]">-</span>
+              <span className="text-sm text-slate-500 font-black">-</span>
               <input 
                 type="date" 
                 value={filterEndDate} 
                 onChange={e => setFilterEndDate(e.target.value)}
-                className="rounded-md border border-[#e2e8f0] px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb]" 
+                className="rounded-md border border-slate-400 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 font-bold" 
               />
             </div>
             
             <button 
               onClick={exportToExcel}
-              className="flex items-center space-x-1 border border-[#e2e8f0] px-3 py-1.5 rounded-md text-sm font-medium text-[#1e293b] hover:bg-[#f8fafc] transition-colors shadow-sm"
+              className="flex items-center space-x-1 border border-slate-400 px-4 py-1.5 rounded-md text-sm font-black text-slate-900 bg-white hover:bg-slate-50 transition-colors shadow-sm"
             >
-              <Download className="w-4 h-4 text-[#2563eb]" />
+              <Download className="w-4 h-4 text-blue-700" />
               <span>导出记录</span>
             </button>
           </div>
@@ -636,41 +635,41 @@ export default function EntryTab({ entries, addEntry, deleteEntry, referencePric
         <div className="overflow-auto flex-1">
           <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
-              <tr className="bg-[#f8fafc]">
-                <th className="px-5 py-3 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] sticky top-0 bg-[#f8fafc]">日期</th>
-                <th className="px-5 py-3 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] sticky top-0 bg-[#f8fafc]">供应商</th>
-                <th className="px-5 py-3 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] sticky top-0 bg-[#f8fafc]">对账周期</th>
-                <th className="px-5 py-3 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] sticky top-0 bg-[#f8fafc]">商品名称</th>
-                <th className="px-5 py-3 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] sticky top-0 bg-[#f8fafc]">单位</th>
-                <th className="px-5 py-3 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] sticky top-0 bg-[#f8fafc] text-right">数量</th>
-                <th className="px-5 py-3 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] sticky top-0 bg-[#f8fafc] text-right">单价(元)</th>
-                <th className="px-5 py-3 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] sticky top-0 bg-[#f8fafc] text-right">小计(元)</th>
-                <th className="px-5 py-3 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] sticky top-0 bg-[#f8fafc]">备注</th>
-                <th className="px-5 py-3 text-xs font-semibold uppercase text-[#64748b] border-b border-[#e2e8f0] sticky top-0 bg-[#f8fafc] text-center">操作</th>
+              <tr className="bg-slate-200">
+                <th className="px-5 py-3 text-xs font-black uppercase text-slate-800 border-b border-slate-400 sticky top-0 md:bg-slate-200">日期</th>
+                <th className="px-5 py-3 text-xs font-black uppercase text-slate-800 border-b border-slate-400 sticky top-0 md:bg-slate-200">供应商</th>
+                <th className="px-5 py-3 text-xs font-black uppercase text-slate-800 border-b border-slate-400 sticky top-0 md:bg-slate-200">对账周期</th>
+                <th className="px-5 py-3 text-xs font-black uppercase text-slate-800 border-b border-slate-400 sticky top-0 md:bg-slate-200">商品名称</th>
+                <th className="px-5 py-3 text-xs font-black uppercase text-slate-800 border-b border-slate-400 sticky top-0 md:bg-slate-200">单位</th>
+                <th className="px-5 py-3 text-xs font-black uppercase text-slate-800 border-b border-slate-400 sticky top-0 md:bg-slate-200 text-right">数量</th>
+                <th className="px-5 py-3 text-xs font-black uppercase text-slate-800 border-b border-slate-400 sticky top-0 md:bg-slate-200 text-right">单价(元)</th>
+                <th className="px-5 py-3 text-xs font-black uppercase text-slate-800 border-b border-slate-400 sticky top-0 md:bg-slate-200 text-right">小计(元)</th>
+                <th className="px-5 py-3 text-xs font-black uppercase text-slate-800 border-b border-slate-400 sticky top-0 md:bg-slate-200">备注</th>
+                <th className="px-5 py-3 text-xs font-black uppercase text-slate-800 border-b border-slate-400 sticky top-0 md:bg-slate-200 text-center">操作</th>
               </tr>
             </thead>
-            <tbody className="text-[#1e293b]">
+            <tbody className="text-slate-900">
               {filteredEntries.map(entry => (
-                <tr key={entry.id} className="border-b border-[#f1f5f9] hover:bg-[#f8fafc] text-sm transition-colors">
-                  <td className="px-5 py-3 text-[#64748b]">{entry.date}</td>
-                  <td className="px-5 py-3 font-medium text-slate-700">{vendors.find(v => v.id === entry.vendorId)?.name || '未知'}</td>
-                  <td className="px-5 py-3 text-[#64748b]"><span className="bg-[#f1f5f9] text-[#64748b] px-2 py-1 rounded text-xs">{entry.periodName}</span></td>
-                  <td className="px-5 py-3 font-medium text-[#1e293b]">{entry.productName}</td>
-                  <td className="px-5 py-3 text-[#64748b]">{entry.unit}</td>
-                  <td className="px-5 py-3 text-[#1e293b] text-right">{entry.quantity}</td>
-                  <td className="px-5 py-3 text-[#1e293b] text-right">{formatCurrency(entry.price)}</td>
-                  <td className="px-5 py-3 text-[#1e293b] text-right font-medium">{formatCurrency(entry.subtotal)}</td>
-                  <td className="px-5 py-3 text-[#64748b]">{entry.remarks}</td>
+                <tr key={entry.id} className="border-b border-slate-300 hover:bg-slate-200/50 text-sm transition-colors">
+                  <td className="px-5 py-3 text-slate-700 font-bold">{entry.date}</td>
+                  <td className="px-5 py-3 font-black text-slate-900">{vendors.find(v => v.id === entry.vendorId)?.name || '未知'}</td>
+                  <td className="px-5 py-3 text-slate-700"><span className="bg-slate-300 text-slate-900 px-2 py-1 rounded text-xs font-black">{entry.periodName}</span></td>
+                  <td className="px-5 py-3 font-black text-slate-900">{entry.productName}</td>
+                  <td className="px-5 py-3 text-slate-700 font-bold">{entry.unit}</td>
+                  <td className="px-5 py-3 text-slate-900 text-right font-bold">{entry.quantity}</td>
+                  <td className="px-5 py-3 text-slate-900 text-right font-bold">{formatCurrency(entry.price)}</td>
+                  <td className="px-5 py-3 text-slate-900 text-right font-black">{formatCurrency(entry.subtotal)}</td>
+                  <td className="px-5 py-3 text-slate-700 font-bold">{entry.remarks}</td>
                   <td className="px-5 py-3 text-center">
-                    <button onClick={() => deleteEntry(entry.id)} className="text-[#ef4444] hover:text-red-700 p-1 rounded hover:bg-red-50 transition-colors" title="删除">
-                      <Trash2 className="w-4 h-4" />
+                    <button onClick={() => deleteEntry(entry.id)} className="text-red-800 hover:text-red-900 p-1.5 rounded hover:bg-red-100 transition-colors" title="删除">
+                      <Trash2 className="w-5 h-5" />
                     </button>
                   </td>
                 </tr>
               ))}
               {filteredEntries.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="py-8 text-center text-[#64748b]">暂无符合条件的录入记录</td>
+                  <td colSpan={10} className="py-12 text-center text-slate-600 font-bold">暂无符合条件的录入记录</td>
                 </tr>
               )}
             </tbody>

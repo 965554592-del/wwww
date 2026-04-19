@@ -1,6 +1,6 @@
 {
-  "name": "食堂食材对账系统",
-  "description": "用于记录食堂食材采购（销货清单），并自动生成价格变动记录表和出入库统计表的系统。",
+  "name": "食堂财务管理系统专业版",
+  "description": "集食材采购对账、价格审计、智能菜谱生成与成本预控于一体的专业级食堂财务管理平台。",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }

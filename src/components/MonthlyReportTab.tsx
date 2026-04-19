@@ -132,6 +132,7 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
     const match = selectedPeriod.match(/(\d+)年(\d+)月/);
     const filterYear = match ? parseInt(match[1]) : 0;
     const filterMonth = match ? parseInt(match[2]) : 0;
+    const daysInMonth = (filterYear && filterMonth) ? new Date(filterYear, filterMonth, 0).getDate() : 30;
 
     const monthlyEntries = entries.filter(e => {
       const d = new Date(e.date);
@@ -170,6 +171,25 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
     
     const grandTotal = mealsTotal + serviceFeeBasePortionVal + incentivePayoutVal + guestTotal + vendorPaymentAmount + otherTotalAmount;
 
+    // Ingredient Stats Calculation
+    const ingredientMap: Record<string, number> = {};
+    monthlyEntries.forEach(e => {
+      if (!ingredientMap[e.productName]) ingredientMap[e.productName] = 0;
+      ingredientMap[e.productName] += (e.subtotal || (e.quantity * e.price)) * vendorPayRate;
+    });
+
+    const ingredientStats = Object.keys(ingredientMap).map(name => {
+      const totalCostAfterDiscount = ingredientMap[name];
+      const costProportion = vendorPaymentAmount > 0 ? (totalCostAfterDiscount / vendorPaymentAmount) * 100 : 0;
+      const perCapitaDailyCost = (allocationTotalCount > 0 && daysInMonth > 0) 
+        ? totalCostAfterDiscount / (allocationTotalCount * daysInMonth) 
+        : 0;
+      return { name, totalCostAfterDiscount, perCapitaDailyCost, costProportion };
+    }).sort((a, b) => b.totalCostAfterDiscount - a.totalCostAfterDiscount);
+
+    const totalPerCapitaDailyCost = ingredientStats.reduce((sum, item) => sum + item.perCapitaDailyCost, 0);
+    const top3Ingredients = ingredientStats.slice(0, 3);
+
     return {
       breakfastTotal,
       lunchTotal,
@@ -189,7 +209,10 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
       allocationTotalCount,
       cadreAmount,
       staffAmount,
-      grandTotal
+      grandTotal,
+      ingredientStats,
+      totalPerCapitaDailyCost,
+      top3Ingredients
     };
   }, [currentReport, entries, selectedPeriod, reductionRate]);
 
@@ -661,6 +684,43 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
             spacing: { before: 200 },
           }),
 
+          // Section 6: 食材成本多维度分析
+          new Paragraph({
+            children: [new TextRun({ text: "六、食材成本多维度分析", size: 32, bold: true, color: "1E40AF" })],
+            spacing: { before: 400, after: 200 },
+            border: { bottom: { color: "CBD5E1", space: 1, style: BorderStyle.SINGLE, size: 6 } },
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({ text: "考虑到服务执行自然月天数及各项食材下浮金额与日用餐密度的关系，本月各维度指标如下（周排菜预算参考）：" }),
+            ],
+            spacing: { before: 200, after: 200 },
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({ text: `综合测算当月总人均单日成本基准分项值为：`, bold: true }),
+              new TextRun({ text: stats.totalPerCapitaDailyCost.toFixed(2), bold: true, color: "B91C1C", size: 28 }),
+              new TextRun({ text: " 元/人·日" }),
+            ],
+            spacing: { after: 200 },
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({ text: "成本总计占比最高（支出最大化）的前三类核心食材成本负荷计算明细：" }),
+            ],
+            spacing: { after: 200 },
+          }),
+          ...stats.top3Ingredients.map((item, idx) => 
+            new Paragraph({
+              children: [
+                new TextRun({ text: `TOP ${idx + 1} - ${item.name}`, bold: true, color: "1E40AF" }),
+                new TextRun({ text: ` (月折后下浮拨付额: ¥${item.totalCostAfterDiscount.toFixed(2)} | 人均日指标负担: ¥${item.perCapitaDailyCost.toFixed(2)} | 月采购结构占比: ${item.costProportion.toFixed(2)}%)` })
+              ],
+              indent: { left: 720 },
+              spacing: { after: 100 },
+            })
+          ),
+          
           // Signatures
           new Paragraph({
             children: [
@@ -1104,6 +1164,46 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
                       {stats.grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 bg-white/5 rounded-2xl p-6 border border-white/10">
+              <h4 className="text-sm font-bold text-slate-300 uppercase tracking-widest mb-4 flex items-center">
+                <Calculator className="w-4 h-4 mr-2" />
+                食材成本细分维度分析 (人均日成本依据)
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <div className="text-xs text-slate-400 mb-2">综合整体总人均单日食材拨付成本</div>
+                  <div className="text-4xl font-mono font-bold text-red-400 flex items-baseline">
+                    <span className="text-2xl mr-1">¥</span>
+                    {stats.totalPerCapitaDailyCost.toFixed(2)}
+                  </div>
+                  <div className="text-[10px] text-slate-500 mt-2 leading-relaxed">基于计算：当前月份下浮后实付成本 ÷<br/>(汇总分配人次 × 对账月自然天数)<br/>*此值将用作 AI 生成智能周菜谱及采购预算预估强约束标准。</div>
+                </div>
+                <div className="space-y-3">
+                  <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">支出占比及成本最高 TOP3 食材</div>
+                  {stats.top3Ingredients.map((item, idx) => (
+                    <div key={item.name} className="flex items-center justify-between bg-white/5 rounded-lg p-3 border border-white/5 hover:bg-white/10 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <div className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-300 flex items-center justify-center font-black text-xs">
+                          {idx + 1}
+                        </div>
+                        <div>
+                          <div className="font-bold text-slate-200 text-sm">{item.name}</div>
+                          <div className="text-[10px] text-slate-400">总体占比: {item.costProportion.toFixed(2)}%</div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-mono text-emerald-400 font-bold">¥{item.perCapitaDailyCost.toFixed(2)}</div>
+                        <div className="text-[9px] text-slate-500">人/日</div>
+                      </div>
+                    </div>
+                  ))}
+                  {stats.top3Ingredients.length === 0 && (
+                    <div className="text-sm text-slate-500 italic py-2">暂无符合条件的月度支出明细供计算。</div>
+                  )}
                 </div>
               </div>
             </div>
