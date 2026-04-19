@@ -782,28 +782,28 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
               </div>
               <button 
                 onClick={saveReport}
-                className="flex items-center gap-2 bg-emerald-500 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-900/10 active:scale-95"
+                className="flex items-center gap-2 bg-emerald-500 text-slate-950 px-5 py-2.5 rounded-xl font-bold hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-900/10 active:scale-95"
               >
                 <Save className="w-4 h-4" />
                 保存当前数据
               </button>
               <button 
                 onClick={exportAllocationToExcel}
-                className="flex items-center space-x-2 px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-xl transition-all font-bold shadow-lg shadow-orange-900/10 active:scale-95"
+                className="flex items-center space-x-2 px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-slate-950 rounded-xl transition-all font-bold shadow-lg shadow-orange-900/10 active:scale-95"
               >
                 <Download className="h-4 w-4" />
                 <span>导出分配表 Excel</span>
               </button>
               <button 
                 onClick={exportToExcel}
-                className="flex items-center space-x-2 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-all font-bold shadow-lg shadow-green-900/10 active:scale-95"
+                className="flex items-center space-x-2 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-slate-950 rounded-xl transition-all font-bold shadow-lg shadow-green-900/10 active:scale-95"
               >
                 <Download className="h-4 w-4" />
                 <span>运行统计报表</span>
               </button>
               <button 
                 onClick={exportToWord}
-                className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-900/10 active:scale-95"
+                className="flex items-center gap-2 bg-blue-600 text-slate-950 px-5 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-900/10 active:scale-95"
               >
                 <FileText className="w-4 h-4" />
                 全新多维度总结报告
@@ -812,7 +812,7 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
           ) : (
             <button 
               onClick={exportSummaryToExcel}
-              className="flex items-center space-x-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all font-bold shadow-lg shadow-blue-900/10 active:scale-95"
+              className="flex items-center space-x-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-slate-950 rounded-xl transition-all font-bold shadow-lg shadow-blue-900/10 active:scale-95"
             >
               <Download className="h-4 w-4" />
               <span>导出奖励标准汇总 Excel</span>

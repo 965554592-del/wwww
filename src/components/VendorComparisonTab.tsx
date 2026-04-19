@@ -248,10 +248,10 @@ export default function VendorComparisonTab({ entries, vendors }: Props) {
                  onChange={e => setSelectedPeriod(e.target.value)}
                  className="text-sm font-bold text-slate-700 focus:outline-none bg-transparent w-full"
                >
-                 {periods.map(p => (
-                   <option key={p} value={p}>{p}</option>
+                 {periods.filter(Boolean).map(p => (
+                   <option key={`period-${p}`} value={p}>{p}</option>
                  ))}
-                 {periods.length === 0 && <option value="">暂无对账周期</option>}
+                 {periods.filter(Boolean).length === 0 && <option key="no-period" value="">暂无对账周期</option>}
                </select>
              </div>
            ) : (
@@ -274,7 +274,7 @@ export default function VendorComparisonTab({ entries, vendors }: Props) {
 
            <button 
             onClick={exportComparisonReport}
-            className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50"
+            className="flex items-center gap-2 bg-blue-600 text-slate-950 px-5 py-2 rounded-lg font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50"
             disabled={comparisonData.length === 0}
            >
              <Download className="w-4 h-4" />

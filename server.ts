@@ -345,16 +345,31 @@ async function startServer() {
     res.json({ success: true });
   });
 
-  // Vite middleware setup
+  // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       server: { 
         middlewareMode: true,
-        allowedHosts: true
+        allowedHosts: true,
+        host: '0.0.0.0',
+        cors: true
       },
       appType: 'spa',
     });
     app.use(vite.middlewares);
+
+    // Serve and transform index.html for the root route and SPA fallback
+    app.get('*', async (req, res, next) => {
+      const url = req.originalUrl;
+      try {
+        let template = fs.readFileSync(path.resolve(__dirname, 'index.html'), 'utf-8');
+        template = await vite.transformIndexHtml(url, template);
+        res.status(200).set({ 'Content-Type': 'text/html' }).end(template);
+      } catch (e: any) {
+        vite.ssrFixStacktrace(e);
+        next(e);
+      }
+    });
   } else {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));

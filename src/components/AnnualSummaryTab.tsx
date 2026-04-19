@@ -66,7 +66,8 @@ export default function AnnualSummaryTab({ entries, reductionRate }: Props) {
     }));
   }, [entries, reductionMultiplier]);
 
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = (amount: number | undefined | null) => {
+    if (amount === undefined || amount === null || isNaN(amount)) return "¥0.00";
     return new Intl.NumberFormat('zh-CN', { style: 'currency', currency: 'CNY' }).format(amount);
   };
 
@@ -263,7 +264,7 @@ export default function AnnualSummaryTab({ entries, reductionRate }: Props) {
         </div>
         <button 
           onClick={exportToWord}
-          className="flex items-center gap-2 bg-[#2563eb] text-white px-5 py-2.5 rounded-md font-medium hover:bg-blue-700 transition-colors shadow-sm"
+          className="flex items-center gap-2 bg-[#2563eb] text-slate-950 px-5 py-2.5 rounded-md font-medium hover:bg-blue-700 transition-colors shadow-sm"
         >
           <FileText className="w-5 h-5" />
           导出为 Word 报告

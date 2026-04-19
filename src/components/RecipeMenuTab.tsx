@@ -262,7 +262,7 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
             onClick={() => setSubTab('menu')}
             className={cn(
               "px-6 py-2.5 rounded-xl font-black text-sm transition-all flex items-center gap-2",
-              subTab === 'menu' ? "bg-indigo-600 text-white shadow-lg" : "text-slate-500 hover:bg-slate-50"
+              subTab === 'menu' ? "bg-indigo-600 text-slate-950 shadow-lg" : "text-slate-500 hover:bg-slate-50"
             )}
           >
             <Sparkles className="w-4 h-4" />
@@ -272,7 +272,7 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
             onClick={() => setSubTab('library')}
             className={cn(
               "px-6 py-2.5 rounded-xl font-black text-sm transition-all flex items-center gap-2",
-              subTab === 'library' ? "bg-indigo-600 text-white shadow-lg" : "text-slate-500 hover:bg-slate-50"
+              subTab === 'library' ? "bg-indigo-600 text-slate-950 shadow-lg" : "text-slate-500 hover:bg-slate-50"
             )}
           >
             <Plus className="w-4 h-4" />
@@ -282,7 +282,7 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
             onClick={() => setSubTab('history')}
             className={cn(
               "px-6 py-2.5 rounded-xl font-black text-sm transition-all flex items-center gap-2",
-              subTab === 'history' ? "bg-indigo-600 text-white shadow-lg" : "text-slate-500 hover:bg-slate-50"
+              subTab === 'history' ? "bg-indigo-600 text-slate-950 shadow-lg" : "text-slate-500 hover:bg-slate-50"
             )}
           >
             <FileBarChart className="w-4 h-4" />
@@ -299,7 +299,7 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
                 onClick={() => setRecipeFilter('all')}
                 className={cn(
                   "px-4 py-2 rounded-xl text-xs font-black transition-all whitespace-nowrap",
-                  recipeFilter === 'all' ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  recipeFilter === 'all' ? "bg-slate-900 text-slate-100" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                 )}
               >
                 全部
@@ -310,7 +310,7 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
                   onClick={() => setRecipeFilter(cat)}
                   className={cn(
                     "px-4 py-2 rounded-xl text-xs font-black transition-all whitespace-nowrap flex items-center gap-2",
-                    recipeFilter === cat ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    recipeFilter === cat ? "bg-indigo-600 text-slate-950" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                   )}
                 >
                   <span className={cn("w-2 h-2 rounded-full", CATEGORY_MAP[cat].color)}></span>
@@ -321,7 +321,7 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
             
             <button 
               onClick={startNewRecipe}
-              className="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-black text-sm hover:bg-indigo-700 transition-all shadow-md flex items-center gap-2 shrink-0"
+              className="bg-indigo-600 text-slate-950 px-6 py-3 rounded-2xl font-black text-sm hover:bg-indigo-700 transition-all shadow-md flex items-center gap-2 shrink-0"
             >
               <Plus className="w-5 h-5" />
               新增菜谱
@@ -361,7 +361,7 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
                   <button 
                     onClick={handleAISuggest}
                     disabled={isAIThinking || !aiPrompt.trim()}
-                    className="bg-indigo-500 text-white px-8 py-5 rounded-2xl font-black hover:bg-indigo-400 transition-all shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                    className="bg-indigo-500 text-slate-950 px-8 py-5 rounded-2xl font-black hover:bg-indigo-400 transition-all shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2"
                   >
                     {isAIThinking ? <Loader2 className="w-6 h-6 animate-spin" /> : <Sparkles className="w-6 h-6" />}
                     魔法生成
@@ -442,7 +442,7 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
                   <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
                     <div className="flex flex-col">
                       <span className="text-[10px] font-black text-slate-400 uppercase">预估成本</span>
-                      <span className="text-lg font-black text-indigo-600">¥ {recipe.estimatedCost.toFixed(2)} /人</span>
+                      <span className="text-lg font-black text-indigo-600">¥ {(recipe.estimatedCost || 0).toFixed(2)} /人</span>
                     </div>
                     <div className="text-xs font-bold text-slate-400">
                       {recipe.ingredients.length} 种配料
@@ -661,7 +661,7 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
                           "mt-2 px-2 py-0.5 rounded-full text-[9px] font-black tracking-tight",
                           calculateDayCost(i) > budgetLimit ? "bg-red-100 text-red-600" : "bg-emerald-100 text-emerald-600"
                         )}>
-                          预计 ¥{calculateDayCost(i).toFixed(1)}
+                          预计 ¥{(calculateDayCost(i) || 0).toFixed(1)}
                         </div>
                       </div>
                     </th>
@@ -697,7 +697,7 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
                               )}
                             >
                               <span>{r.name}</span>
-                              <span className="text-[9px] opacity-60">¥{r.estimatedCost.toFixed(1)}</span>
+                              <span className="text-[9px] opacity-60">¥{(r.estimatedCost || 0).toFixed(1)}</span>
                               <div className="absolute top-0 right-0 -mt-2 -mr-2 hidden group-hover/pill:flex gap-1 bg-white shadow-sm rounded-lg border border-slate-200 overflow-hidden z-10">
                                 <button
                                   type="button"
@@ -757,7 +757,7 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
                               )}
                             >
                               <span>{r.name}</span>
-                              <span className="text-[9px] opacity-60">¥{r.estimatedCost.toFixed(1)}</span>
+                              <span className="text-[9px] opacity-60">¥{(r.estimatedCost || 0).toFixed(1)}</span>
                               <div className="absolute top-0 right-0 -mt-2 -mr-2 hidden group-hover/pill:flex gap-1 bg-white shadow-sm rounded-lg border border-slate-200 overflow-hidden z-10">
                                 <button
                                   type="button"
@@ -817,7 +817,7 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
                               )}
                             >
                               <span>{r.name}</span>
-                              <span className="text-[9px] opacity-60">¥{r.estimatedCost.toFixed(1)}</span>
+                              <span className="text-[9px] opacity-60">¥{(r.estimatedCost || 0).toFixed(1)}</span>
                               <div className="absolute top-0 right-0 -mt-2 -mr-2 hidden group-hover/pill:flex gap-1 bg-white shadow-sm rounded-lg border border-slate-200 overflow-hidden z-10">
                                 <button
                                   type="button"
@@ -965,7 +965,7 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
                       }}
                       className={cn(
                         "px-3 py-1.5 rounded-xl text-xs font-black border-2 transition-all",
-                        editingRecipe.nutritionTags.includes(tag) ? "bg-indigo-600 border-indigo-600 text-white" : "border-slate-200 text-slate-400 hover:border-slate-300"
+                        editingRecipe.nutritionTags.includes(tag) ? "bg-indigo-600 border-indigo-600 text-slate-950" : "border-slate-200 text-slate-400 hover:border-slate-300"
                       )}
                     >
                       {tag}
@@ -1010,7 +1010,7 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
 
               <button 
                 type="submit" 
-                className="w-full py-5 bg-indigo-600 text-white font-black rounded-2xl shadow-xl shadow-indigo-200 hover:bg-indigo-700 transition-all active:scale-95 flex items-center justify-center gap-2 mt-4"
+                className="w-full py-5 bg-indigo-600 text-slate-950 font-black rounded-2xl shadow-xl shadow-indigo-200 hover:bg-indigo-700 transition-all active:scale-95 flex items-center justify-center gap-2 mt-4"
               >
                 <Save className="w-6 h-6" />
                 保存菜谱
@@ -1074,7 +1074,7 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
                           </span>
                         </div>
                       </div>
-                      <span className="font-black text-indigo-600">¥{r.estimatedCost.toFixed(1)}</span>
+                      <span className="font-black text-indigo-600">¥{(r.estimatedCost || 0).toFixed(1)}</span>
                     </button>
                   ))
                 }

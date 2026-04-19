@@ -290,7 +290,7 @@ export default function InventoryTab({ entries, reductionRate }: InventoryTabPro
         <div className="flex items-center space-x-4">
           <button 
             onClick={exportPaymentPlan}
-            className="flex items-center space-x-2 bg-emerald-600 border-2 border-emerald-700 px-5 py-2 rounded-md text-sm font-black text-white hover:bg-emerald-700 transition-all shadow-md active:scale-95"
+            className="flex items-center space-x-2 bg-emerald-600 border-2 border-emerald-700 px-5 py-2 rounded-md text-sm font-black text-slate-950 hover:bg-emerald-700 transition-all shadow-md active:scale-95"
           >
             <FileText className="w-5 h-5 text-white" />
             <span>导出付款计划</span>
@@ -309,8 +309,8 @@ export default function InventoryTab({ entries, reductionRate }: InventoryTabPro
               onChange={e => setSelectedPeriod(e.target.value)}
               className="rounded-md border-2 border-slate-400 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white font-black text-slate-900"
             >
-              {periods.map(p => (
-                <option key={p} value={p}>{p}</option>
+              {periods.filter(Boolean).map(p => (
+                <option key={`period-${p}`} value={p}>{p}</option>
               ))}
             </select>
           </div>
@@ -465,8 +465,8 @@ export default function InventoryTab({ entries, reductionRate }: InventoryTabPro
                 onChange={e => setUnitFilter(e.target.value)}
                 className="rounded-xl border-2 border-slate-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white min-w-[120px] font-black"
               >
-                <option value="">全部单位</option>
-                {uniqueUnits.map(u => <option key={u} value={u}>{u}</option>)}
+                <option key="all-units" value="">全部单位</option>
+                {uniqueUnits.filter(Boolean).map(u => <option key={`unit-${u}`} value={u}>{u}</option>)}
               </select>
             </div>
           </div>

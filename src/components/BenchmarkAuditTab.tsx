@@ -82,31 +82,31 @@ export default function BenchmarkAuditTab({ entries }: Props) {
            <div className="bg-white border border-slate-200 rounded-lg p-1 flex">
              <button 
                onClick={() => setReportType('monthly')}
-               className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${reportType === 'monthly' ? "bg-slate-900 text-white shadow-md" : "text-slate-500 hover:text-slate-900"}`}
+               className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${reportType === 'monthly' ? "bg-slate-900 text-slate-100 shadow-md" : "text-slate-500 hover:text-slate-900"}`}
              >
                月度报表
              </button>
              <button 
                onClick={() => setReportType('annual')}
-               className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${reportType === 'annual' ? "bg-slate-900 text-white shadow-md" : "text-slate-500 hover:text-slate-900"}`}
+               className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${reportType === 'annual' ? "bg-slate-900 text-slate-100 shadow-md" : "text-slate-500 hover:text-slate-900"}`}
              >
                年度报表
              </button>
            </div>
            
-           <select 
-             value={selectedPeriod} 
-             onChange={e => setSelectedPeriod(e.target.value)}
-             className="bg-white border border-slate-200 rounded-lg px-4 py-2 text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none"
-           >
-             {periods.map(p => (
-               <option key={p} value={p}>{p}</option>
-             ))}
-           </select>
+            <select 
+              value={selectedPeriod} 
+              onChange={e => setSelectedPeriod(e.target.value)}
+              className="bg-white border border-slate-200 rounded-lg px-4 py-2 text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none"
+            >
+              {periods.filter(Boolean).map(p => (
+                <option key={`period-${p}`} value={p}>{p}</option>
+              ))}
+            </select>
 
            <button 
             onClick={exportReport}
-            className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20"
+            className="flex items-center gap-2 bg-blue-600 text-slate-950 px-5 py-2 rounded-lg font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20"
            >
              <FileSpreadsheet className="w-4 h-4" />
              导出 Excel 报告

@@ -10,7 +10,7 @@ interface PriceHistoryTabProps {
 
 export default function PriceHistoryTab({ records }: PriceHistoryTabProps) {
   const periods = useMemo(() => {
-    return Array.from(new Set(records.map(r => r.periodName))).sort().reverse();
+    return Array.from(new Set(records.map(r => r.periodName))).filter(Boolean).sort().reverse();
   }, [records]);
 
   const [selectedPeriod, setSelectedPeriod] = useState<string>(periods[0] || '');
@@ -138,9 +138,9 @@ export default function PriceHistoryTab({ records }: PriceHistoryTabProps) {
               onChange={e => setSelectedPeriod(e.target.value)}
               className="rounded-md border border-[#e2e8f0] px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb] bg-white font-medium"
             >
-              <option value="">全部历史记录</option>
+              <option key="all-periods" value="">全部历史记录</option>
               {periods.map(p => (
-                <option key={p} value={p}>{p}</option>
+                <option key={`period-${p}`} value={p}>{p}</option>
               ))}
             </select>
           </div>

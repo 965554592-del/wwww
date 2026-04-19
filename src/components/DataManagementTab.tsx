@@ -201,7 +201,7 @@ export default function DataManagementTab({ onBackup, onRestore, onClearAll, onO
                     <button 
                       onClick={handleSavePath}
                       disabled={isSavingPath}
-                      className="bg-slate-900 text-white px-8 py-4 rounded-xl font-black text-sm hover:bg-indigo-600 transition-all shadow-lg active:scale-95 flex items-center gap-2 disabled:opacity-50"
+                      className="bg-slate-900 text-slate-100 px-8 py-4 rounded-xl font-black text-sm hover:bg-indigo-600 transition-all shadow-lg active:scale-95 flex items-center gap-2 disabled:opacity-50"
                     >
                       {isSavingPath ? <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin rounded-full" /> : <Save className="w-5 h-5" />}
                       映射磁盘路径
@@ -249,7 +249,7 @@ export default function DataManagementTab({ onBackup, onRestore, onClearAll, onO
             <button onClick={() => setShowConfirmClear(false)} className="px-6 py-4 bg-white text-slate-600 rounded-2xl font-black text-sm border border-slate-200">
               取消操作
             </button>
-            <button onClick={onClearAll} className="px-6 py-4 bg-red-600 text-white rounded-2xl font-black text-sm shadow-xl shadow-red-200 animate-pulse">
+            <button onClick={onClearAll} className="px-6 py-4 bg-red-600 text-slate-950 rounded-2xl font-black text-sm shadow-xl shadow-red-200 animate-pulse">
               确定执行删除
             </button>
           </div>

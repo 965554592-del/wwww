@@ -53,7 +53,7 @@ export function computeInventory(entries: Entry[], selectedPeriod: string): Inve
    for (const entry of entries) {
       if (entry.periodName !== selectedPeriod) continue;
       
-      const key = `${entry.productName}_${entry.unit}_${entry.price.toFixed(2)}`;
+      const key = `${entry.productName}_${entry.unit}_${(entry.price || 0).toFixed(2)}`;
       if (!rows.has(key)) {
          rows.set(key, {
             id: key,

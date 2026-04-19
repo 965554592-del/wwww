@@ -140,7 +140,7 @@ export default function ReferencePriceTab({ referencePrices, updateReferencePric
               <input type="number" step="0.01" min="0" required value={price} onChange={e => setPrice(e.target.value === '' ? '' : Number(e.target.value))} placeholder="输入封顶价格..." className="w-full rounded-md border border-slate-400 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 font-bold bg-white" />
             </div>
             <div>
-              <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-md text-sm font-black transition-all hover:bg-blue-700 shadow-md flex items-center gap-2 uppercase tracking-wide active:scale-95">
+              <button type="submit" className="bg-blue-600 text-slate-950 px-6 py-2 rounded-md text-sm font-black transition-all hover:bg-blue-700 shadow-md flex items-center gap-2 uppercase tracking-wide active:scale-95">
                 <Plus className="w-5 h-5" /> 保存基准价
               </button>
             </div>
@@ -159,7 +159,7 @@ export default function ReferencePriceTab({ referencePrices, updateReferencePric
               <Download className="w-4 h-4" />
               <span>下载模板</span>
             </button>
-            <label className="flex items-center space-x-1 border border-emerald-500 bg-emerald-600 text-white px-3 py-1.5 rounded-md text-sm font-black hover:bg-emerald-700 transition-colors shadow-sm cursor-pointer active:scale-95">
+            <label className="flex items-center space-x-1 border border-emerald-500 bg-emerald-600 text-slate-950 px-3 py-1.5 rounded-md text-sm font-black hover:bg-emerald-700 transition-colors shadow-sm cursor-pointer active:scale-95">
               <Upload className="w-4 h-4" />
               <span>批量导入</span>
               <input type="file" accept=".xlsx,.xls" className="hidden" ref={fileInputRef} onChange={handleFileUpload} />

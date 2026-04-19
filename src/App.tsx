@@ -128,9 +128,13 @@ export default function App() {
   }, []);
 
   const addEntry = async (entry: Entry) => {
-    const updated = [...entries, entry];
-    setEntries(updated);
+    setEntries(prev => [...prev, entry]);
     await dbService.saveEntry(entry);
+  };
+
+  const addEntries = async (newEntries: Entry[]) => {
+    setEntries(prev => [...prev, ...newEntries]);
+    await dbService.bulkSaveEntries(newEntries);
   };
 
   const deleteEntry = async (id: string) => {
@@ -386,7 +390,7 @@ export default function App() {
 
               <button 
                 type="submit"
-                className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-2xl shadow-xl shadow-blue-500/20 active:scale-[0.98] transition-all transform duration-200 mt-4 tracking-widest uppercase"
+                className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-slate-950 font-black rounded-2xl shadow-xl shadow-blue-500/20 active:scale-[0.98] transition-all transform duration-200 mt-4 tracking-widest uppercase"
               >
                 进入系统
               </button>
@@ -399,95 +403,95 @@ export default function App() {
 
   return (
     <div className="flex h-screen bg-[#f1f5f9] text-[#0f172a] font-sans overflow-hidden">
-      <aside className="w-[260px] bg-[#020617] flex flex-col shrink-0 z-10 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
+      <aside className="w-[260px] bg-white flex flex-col shrink-0 z-10 shadow-xl relative overflow-hidden border-r border-slate-200">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
         
         <div className="px-8 py-10 relative">
-          <div className="flex items-center gap-3 text-white mb-2">
+          <div className="flex items-center gap-3 text-slate-900 mb-2">
             <div className="w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg border border-white/10">
-              <Wallet className="w-6 h-6" />
+              <Wallet className="w-6 h-6 text-white" />
             </div>
-            <span className="font-black text-xl tracking-tighter text-blue-50">食堂财务专业版</span>
+            <span className="font-black text-xl tracking-tighter text-slate-950">食堂财务专业版</span>
           </div>
-          <p className="text-slate-500 text-[10px] uppercase font-black tracking-[0.3em] ml-13">SQL-PRO CORE v4.0</p>
+          <p className="text-slate-400 text-[10px] uppercase font-black tracking-[0.3em] ml-13">SQL-PRO CORE v4.0</p>
         </div>
         
         <nav className="flex flex-col px-4 gap-1.5 flex-1 relative overflow-y-auto custom-scrollbar">
-          <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-4 mb-2 opacity-50">数据录入</div>
-          <button onClick={() => setActiveTab('entry')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'entry' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-slate-800')}>
+          <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-4 mb-2 opacity-70">数据录入</div>
+          <button onClick={() => setActiveTab('entry')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'entry' ? 'bg-blue-600 text-slate-950 shadow-lg shadow-blue-100' : 'text-slate-600 hover:text-blue-600 hover:bg-blue-50/50')}>
             <ClipboardList className="w-5 h-5" />
             <span>单据录入</span>
           </button>
-          <button onClick={() => setActiveTab('recipe-menu')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'recipe-menu' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-slate-800')}>
+          <button onClick={() => setActiveTab('recipe-menu')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'recipe-menu' ? 'bg-blue-600 text-slate-950 shadow-lg shadow-blue-100' : 'text-slate-600 hover:text-blue-600 hover:bg-blue-50/50')}>
             <FileBarChart className="w-5 h-5" />
             <span>菜谱周谱</span>
           </button>
           
-          <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-4 mb-2 mt-4 opacity-50">分析报表</div>
-          <button onClick={() => setActiveTab('price')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'price' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-slate-800')}>
+          <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-4 mb-2 mt-4 opacity-70">分析报表</div>
+          <button onClick={() => setActiveTab('price')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'price' ? 'bg-blue-600 text-slate-950 shadow-lg shadow-blue-100' : 'text-slate-600 hover:text-blue-600 hover:bg-blue-50/50')}>
             <TrendingUp className="w-5 h-5" />
             <span>变动分析</span>
           </button>
-          <button onClick={() => setActiveTab('trend')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'trend' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-slate-800')}>
+          <button onClick={() => setActiveTab('trend')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'trend' ? 'bg-blue-600 text-slate-950 shadow-lg shadow-blue-100' : 'text-slate-600 hover:text-blue-600 hover:bg-blue-50/50')}>
             <LineChartIcon className="w-5 h-5" />
             <span>走势报告</span>
           </button>
-          <button onClick={() => setActiveTab('inventory')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'inventory' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-slate-800')}>
+          <button onClick={() => setActiveTab('inventory')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'inventory' ? 'bg-blue-600 text-slate-950 shadow-lg shadow-blue-100' : 'text-slate-600 hover:text-blue-600 hover:bg-blue-50/50')}>
             <Package className="w-5 h-5" />
             <span>库存储备</span>
           </button>
-          <button onClick={() => setActiveTab('monthly-report')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'monthly-report' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-slate-800')}>
+          <button onClick={() => setActiveTab('monthly-report')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'monthly-report' ? 'bg-blue-600 text-slate-950 shadow-lg shadow-blue-100' : 'text-slate-600 hover:text-blue-600 hover:bg-blue-50/50')}>
             <FileBarChart className="w-5 h-5" />
             <span>运行统计</span>
           </button>
-          <button onClick={() => setActiveTab('annual-summary')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'annual-summary' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-slate-800')}>
+          <button onClick={() => setActiveTab('annual-summary')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'annual-summary' ? 'bg-blue-600 text-slate-950 shadow-lg shadow-blue-100' : 'text-slate-600 hover:text-blue-600 hover:bg-blue-50/50')}>
             <PieChart className="w-5 h-5" />
             <span>年终总结</span>
           </button>
 
-          <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-4 mb-2 mt-4 opacity-50">价格审计</div>
-          <button onClick={() => setActiveTab('reference')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'reference' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-slate-800')}>
+          <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-4 mb-2 mt-4 opacity-70">价格审计</div>
+          <button onClick={() => setActiveTab('reference')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'reference' ? 'bg-blue-600 text-slate-950 shadow-lg shadow-blue-100' : 'text-slate-600 hover:text-blue-600 hover:bg-blue-50/50')}>
             <Tag className="w-5 h-5" />
             <span>基准定价</span>
           </button>
-          <button onClick={() => setActiveTab('audit')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'audit' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-slate-800')}>
+          <button onClick={() => setActiveTab('audit')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'audit' ? 'bg-blue-600 text-slate-950 shadow-lg shadow-blue-100' : 'text-slate-600 hover:text-blue-600 hover:bg-blue-50/50')}>
             <ShieldCheck className="w-5 h-5" />
             <span>合规审计</span>
           </button>
           
-          <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-4 mb-2 mt-4 opacity-50">供应链</div>
-          <button onClick={() => setActiveTab('vendor-comparison')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'vendor-comparison' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-slate-800')}>
+          <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-4 mb-2 mt-4 opacity-70">供应链</div>
+          <button onClick={() => setActiveTab('vendor-comparison')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'vendor-comparison' ? 'bg-blue-600 text-slate-950 shadow-lg shadow-blue-100' : 'text-slate-600 hover:text-blue-600 hover:bg-blue-50/50')}>
             <ArrowLeftRight className="w-5 h-5" />
             <span>供货比价</span>
           </button>
-          <button onClick={() => setActiveTab('vendors')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'vendors' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-slate-800')}>
+          <button onClick={() => setActiveTab('vendors')} className={cn("px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all duration-200 group active:scale-95", activeTab === 'vendors' ? 'bg-blue-600 text-slate-950 shadow-lg shadow-blue-100' : 'text-slate-600 hover:text-blue-600 hover:bg-blue-50/50')}>
             <Truck className="w-5 h-5" />
             <span>供应商库</span>
           </button>
 
           <div className="mt-auto mb-4">
-             <button onClick={() => setActiveTab('settings')} className={cn("w-full px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all group border-2", activeTab === 'settings' ? 'bg-white text-slate-950 border-white shadow-xl scale-105' : 'text-slate-500 border-slate-800/50 hover:text-white hover:border-slate-700')}>
+             <button onClick={() => setActiveTab('settings')} className={cn("w-full px-4 py-3 flex items-center gap-3 font-black rounded-xl transition-all group border-2", activeTab === 'settings' ? 'bg-blue-600 text-slate-950 border-blue-600 shadow-xl scale-105' : 'text-slate-600 border-slate-100 hover:text-blue-600 hover:border-blue-100')}>
               <Settings className="w-5 h-5" />
               <span>系统设置</span>
             </button>
           </div>
         </nav>
 
-        <div className="px-5 py-6 mt-auto bg-slate-900/50 border-t-2 border-slate-800">
+        <div className="px-5 py-6 mt-auto bg-slate-50 border-t-2 border-slate-100">
            <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-              <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">账号：{credentials.username}</span>
+              <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">账号：{credentials.username}</span>
             </div>
-            <button onClick={handleLogout} className="p-2 text-slate-500 hover:text-red-500 rounded-lg transition-all" title="登出">
+            <button onClick={handleLogout} className="p-2 text-slate-400 hover:text-red-500 rounded-lg transition-all" title="登出">
               <LogOut className="w-4 h-4" />
             </button>
           </div>
-          <div className="bg-slate-950 p-3 rounded-xl border border-slate-800">
-            <label className="block text-[9px] font-black text-slate-500 uppercase mb-2">开票下浮比例</label>
+          <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+            <label className="block text-[9px] font-black text-slate-400 uppercase mb-2">开票下浮比例</label>
             <div className="flex items-center gap-2">
-              <input type="number" value={reductionRate} onChange={(e) => handleUpdateReductionRate(Number(e.target.value))} min="0" max="100" className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs font-black text-white focus:outline-none focus:ring-1 focus:ring-blue-600" />
-              <span className="text-blue-500 font-black">%</span>
+              <input type="number" value={reductionRate} onChange={(e) => handleUpdateReductionRate(Number(e.target.value))} min="0" max="100" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs font-black text-slate-950 focus:outline-none focus:ring-1 focus:ring-blue-600" />
+              <span className="text-blue-600 font-black">%</span>
             </div>
           </div>
         </div>
@@ -496,7 +500,7 @@ export default function App() {
       <main className="flex-1 flex flex-col overflow-auto bg-slate-100 relative custom-scrollbar">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.05] pointer-events-none"></div>
         <div className="flex-1 flex flex-col p-8 gap-8 max-w-7xl mx-auto w-full relative z-10">
-          {activeTab === 'entry' && <EntryTab entries={entries} addEntry={addEntry} deleteEntry={deleteEntry} referencePrices={referencePrices} vendors={vendors} />}
+          {activeTab === 'entry' && <EntryTab entries={entries} addEntry={addEntry} addEntries={addEntries} deleteEntry={deleteEntry} referencePrices={referencePrices} vendors={vendors} />}
           {activeTab === 'price' && <PriceHistoryTab records={priceRecords} />}
           {activeTab === 'trend' && <TrendTab entries={entries} referencePrices={referencePrices} />}
           {activeTab === 'inventory' && <InventoryTab entries={entries} reductionRate={reductionRate} />}
@@ -529,7 +533,7 @@ export default function App() {
               {passwordChangeSuccess && <div className="text-emerald-400 text-[10px] font-black p-2 bg-emerald-500/10 rounded-lg">{passwordChangeSuccess}</div>}
               <div className="flex gap-2 pt-4">
                 <button type="button" onClick={() => setIsChangingPassword(false)} className="flex-1 py-3 bg-slate-800 text-slate-400 font-bold rounded-xl">取消</button>
-                <button type="submit" className="flex-1 py-3 bg-blue-600 text-white font-black rounded-xl">确认修改</button>
+                <button type="submit" className="flex-1 py-3 bg-blue-600 text-slate-950 font-black rounded-xl">确认修改</button>
               </div>
             </form>
           </div>

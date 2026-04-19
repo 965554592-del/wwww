@@ -22,7 +22,8 @@ export function getPeriodName(dateStr: string): string {
   return `${year}年${month}月`;
 }
 
-export function formatCurrency(amount: number): string {
+export function formatCurrency(amount: number | undefined | null): string {
+  if (amount === undefined || amount === null || isNaN(amount)) return "0.00";
   return amount.toFixed(2);
 }
 

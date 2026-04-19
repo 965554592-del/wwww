@@ -7,6 +7,7 @@ import * as XLSX from 'xlsx';
 interface EntryTabProps {
   entries: Entry[];
   addEntry: (entry: Entry) => void;
+  addEntries: (entries: Entry[]) => void;
   deleteEntry: (id: string) => void;
   referencePrices: Record<string, number>;
   vendors: Vendor[];
@@ -36,7 +37,7 @@ const createEmptyBulkItem = (defaultVendorId = ''): BulkItem => ({
   remarks: ''
 });
 
-export default function EntryTab({ entries, addEntry, deleteEntry, referencePrices, vendors }: EntryTabProps) {
+export default function EntryTab({ entries, addEntry, addEntries, deleteEntry, referencePrices, vendors }: EntryTabProps) {
   const [isBulkMode, setIsBulkMode] = useState(false);
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   
@@ -333,8 +334,8 @@ export default function EntryTab({ entries, addEntry, deleteEntry, referencePric
       return;
     }
 
-    validEntries.forEach(entry => addEntry(entry));
-    setBulkItems([createEmptyBulkItem()]);
+    addEntries(validEntries);
+    setBulkItems([createEmptyBulkItem(vendors.find(v => v.isPreferred)?.id || (vendors[0]?.id) || '')]);
     setBulkWarnings(new Set());
     setBulkWarningActive(false);
   };
@@ -442,7 +443,7 @@ export default function EntryTab({ entries, addEntry, deleteEntry, referencePric
                   </div>
                 ) : <div></div>}
               </div>
-              <button type="submit" className={cn("text-white px-8 py-2.5 rounded-md text-sm font-black transition-all shadow-md shrink-0", singleWarningActive ? "bg-red-700 hover:bg-red-800 ring-4 ring-red-200" : "bg-blue-600 hover:bg-blue-700")}>
+              <button type="submit" className={cn("text-slate-950 px-8 py-2.5 rounded-md text-sm font-black transition-all shadow-md shrink-0", singleWarningActive ? "bg-red-700 hover:bg-red-800 ring-4 ring-red-200" : "bg-blue-600 hover:bg-blue-700")}>
                 {singleWarningActive ? '价格严重超标，确认强制录入' : '立即保存单据'}
               </button>
             </div>
@@ -567,7 +568,7 @@ export default function EntryTab({ entries, addEntry, deleteEntry, referencePric
                     <AlertCircle className="w-5 h-5 mr-1.5" /> ⚠️ 部分商品价格异常
                   </div>
                 )}
-                <button onClick={handleBulkSubmit} className={cn("text-white px-8 py-3 rounded-md text-sm font-black transition-all shadow-lg active:scale-95", bulkWarningActive ? "bg-red-700 hover:bg-red-800 ring-4 ring-red-200" : "bg-blue-600 hover:bg-blue-700")}>
+                <button onClick={handleBulkSubmit} className={cn("text-slate-950 px-8 py-3 rounded-md text-sm font-black transition-all shadow-lg active:scale-95", bulkWarningActive ? "bg-red-700 hover:bg-red-800 ring-4 ring-red-200" : "bg-blue-600 hover:bg-blue-700")}>
                   {bulkWarningActive ? `价格超标，再次点击强制提交 (${bulkItems.length}笔)` : `保存批量录入记录 (${bulkItems.length}笔)`}
                 </button>
               </div>
