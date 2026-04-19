@@ -159,7 +159,7 @@ export default function TrendTab({ entries, referencePrices }: TrendTabProps) {
                       {product}
                     </span>
                     {refPrice && (
-                      <span className="text-[10px] text-slate-400">基准价: ¥{refPrice}</span>
+                      <span className="text-[10px] text-slate-400">基准价: ¥{refPrice.toFixed(1)}</span>
                     )}
                   </div>
                   <div className={cn(
@@ -226,7 +226,7 @@ export default function TrendTab({ entries, referencePrices }: TrendTabProps) {
                       axisLine={false}
                       tickLine={false}
                       tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }}
-                      tickFormatter={(value) => `¥${value}`}
+                      tickFormatter={(value) => `¥${formatCurrency(value)}`}
                     />
                     <Tooltip 
                       content={({ active, payload, label }) => {

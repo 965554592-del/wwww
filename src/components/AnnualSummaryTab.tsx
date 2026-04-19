@@ -34,9 +34,9 @@ export default function AnnualSummaryTab({ entries, reductionRate }: Props) {
     const chartData = sortedPeriods.map(period => ({
       name: period,
       amount: summary[period],
-      fmtAmount: Number(summary[period].toFixed(2)),
+      fmtAmount: Number(summary[period].toFixed(1)),
       reducedAmount: summary[period] * reductionMultiplier,
-      fmtReducedAmount: Number((summary[period] * reductionMultiplier).toFixed(2))
+      fmtReducedAmount: Number((summary[period] * reductionMultiplier).toFixed(1))
     }));
 
     const totalReducedAll = totalAll * reductionMultiplier;
@@ -60,9 +60,9 @@ export default function AnnualSummaryTab({ entries, reductionRate }: Props) {
     return sortedMonths.map(month => ({
       month,
       amount: summary[month],
-      fmtAmount: Number(summary[month].toFixed(2)),
+      fmtAmount: Number(summary[month].toFixed(1)),
       reducedAmount: summary[month] * reductionMultiplier,
-      fmtReducedAmount: Number((summary[month] * reductionMultiplier).toFixed(2))
+      fmtReducedAmount: Number((summary[month] * reductionMultiplier).toFixed(1))
     }));
   }, [entries, reductionMultiplier]);
 
@@ -130,11 +130,11 @@ export default function AnnualSummaryTab({ entries, reductionRate }: Props) {
           }),
           new TableCell({
             shading: { fill: "f8fafc" },
-            children: [new Paragraph({ children: [new TextRun({ text: periodData.totalAll.toFixed(2).toLocaleString(), bold: true, color: "2563eb", size: 24 })], alignment: AlignmentType.CENTER })],
+            children: [new Paragraph({ children: [new TextRun({ text: periodData.totalAll.toFixed(1).toLocaleString(), bold: true, color: "2563eb", size: 24 })], alignment: AlignmentType.CENTER })],
           }),
           new TableCell({
             shading: { fill: "f8fafc" },
-            children: [new Paragraph({ children: [new TextRun({ text: periodData.totalReducedAll.toFixed(2).toLocaleString(), bold: true, color: "10b981", size: 24 })], alignment: AlignmentType.CENTER })],
+            children: [new Paragraph({ children: [new TextRun({ text: periodData.totalReducedAll.toFixed(1).toLocaleString(), bold: true, color: "10b981", size: 24 })], alignment: AlignmentType.CENTER })],
           }),
         ],
       })

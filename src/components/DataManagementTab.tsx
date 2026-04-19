@@ -105,7 +105,7 @@ export default function DataManagementTab({ onBackup, onRestore, onClearAll, onO
 
             <button 
               onClick={onOpenPasswordModal}
-              className="mt-2 bg-slate-950 text-white px-6 py-4 rounded-2xl font-black text-sm hover:bg-slate-800 transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 group"
+              className="mt-2 bg-slate-900 text-white px-6 py-4 rounded-2xl font-black text-sm border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(15,23,42,1)] active:translate-y-0 active:shadow-none transition-all flex items-center justify-center gap-2 group"
             >
               <Lock className="w-5 h-5 group-hover:rotate-12 transition-transform" />
               修改系统访问密码
@@ -177,10 +177,10 @@ export default function DataManagementTab({ onBackup, onRestore, onClearAll, onO
               </div>
 
               <div className="flex gap-2">
-                <button onClick={onBackup} className="px-5 py-3 bg-slate-100 text-slate-700 rounded-xl font-black text-xs hover:bg-slate-200 transition-all flex items-center gap-2">
+                <button onClick={onBackup} className="px-5 py-3 bg-white text-slate-800 rounded-xl font-black text-xs border-2 border-slate-900 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] hover:bg-slate-50 transition-all flex items-center gap-2 active:translate-y-0.5 active:shadow-none">
                   <Download className="w-4 h-4" /> 导出备份
                 </button>
-                <button onClick={() => fileInputRef.current?.click()} className="px-5 py-3 bg-slate-100 text-slate-700 rounded-xl font-black text-xs hover:bg-slate-200 transition-all flex items-center gap-2 text-indigo-600">
+                <button onClick={() => fileInputRef.current?.click()} className="px-5 py-3 bg-white text-indigo-700 rounded-xl font-black text-xs border-2 border-slate-900 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] hover:bg-slate-50 transition-all flex items-center gap-2 active:translate-y-0.5 active:shadow-none">
                   <Upload className="w-4 h-4" /> 导入恢复
                 </button>
                 <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept=".json" />
@@ -201,7 +201,7 @@ export default function DataManagementTab({ onBackup, onRestore, onClearAll, onO
                     <button 
                       onClick={handleSavePath}
                       disabled={isSavingPath}
-                      className="bg-slate-900 text-slate-100 px-8 py-4 rounded-xl font-black text-sm hover:bg-indigo-600 transition-all shadow-lg active:scale-95 flex items-center gap-2 disabled:opacity-50"
+                      className="bg-slate-900 text-slate-100 px-8 py-4 rounded-xl font-black text-sm border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:bg-indigo-600 transition-all active:translate-y-0.5 active:shadow-none flex items-center gap-2 disabled:opacity-50"
                     >
                       {isSavingPath ? <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin rounded-full" /> : <Save className="w-5 h-5" />}
                       映射磁盘路径
@@ -241,15 +241,24 @@ export default function DataManagementTab({ onBackup, onRestore, onClearAll, onO
         </div>
 
         {!showConfirmClear ? (
-          <button onClick={() => setShowConfirmClear(true)} className="px-8 py-4 bg-white border-2 border-red-200 text-red-600 rounded-2xl font-black text-sm hover:bg-red-600 hover:text-white hover:border-red-600 transition-all shadow-md active:scale-95">
+          <button 
+            onClick={() => setShowConfirmClear(true)} 
+            className="px-8 py-4 bg-white border-2 border-slate-900 text-slate-900 rounded-2xl font-black text-sm hover:bg-red-50 transition-all shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] active:translate-y-0.5 active:shadow-none"
+          >
             初始化全量数据
           </button>
         ) : (
           <div className="flex gap-2">
-            <button onClick={() => setShowConfirmClear(false)} className="px-6 py-4 bg-white text-slate-600 rounded-2xl font-black text-sm border border-slate-200">
+            <button 
+              onClick={() => setShowConfirmClear(false)} 
+              className="px-6 py-4 bg-white text-slate-800 rounded-2xl font-black text-sm border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-y-0.5 active:shadow-none transition-all"
+            >
               取消操作
             </button>
-            <button onClick={onClearAll} className="px-6 py-4 bg-red-600 text-slate-950 rounded-2xl font-black text-sm shadow-xl shadow-red-200 animate-pulse">
+            <button 
+              onClick={onClearAll} 
+              className="px-6 py-4 bg-red-600 text-slate-950 rounded-2xl font-black text-sm border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-y-0.5 active:shadow-none transition-all animate-pulse"
+            >
               确定执行删除
             </button>
           </div>

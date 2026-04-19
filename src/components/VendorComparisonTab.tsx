@@ -134,7 +134,7 @@ export default function VendorComparisonTab({ entries, vendors }: Props) {
             return new TableCell({ 
               shading: isMin ? { fill: "f0fdf4" } : undefined,
               children: [new Paragraph({ 
-                children: [new TextRun({ text: vData ? vData.price.toFixed(2) : "-", bold: isMin, color: isMin ? "16a34a" : "000000" })], 
+                children: [new TextRun({ text: vData ? vData.price.toFixed(1) : "-", bold: isMin, color: isMin ? "16a34a" : "000000" })], 
                 alignment: AlignmentType.CENTER 
               })] 
             });
@@ -198,7 +198,7 @@ export default function VendorComparisonTab({ entries, vendors }: Props) {
               new TextRun({ text: `【${maxSpreadItem.product}】`, bold: true, color: "ef4444" }),
               new TextRun({ text: `，其跨供应商价差比例达到 ` }),
               new TextRun({ text: `${maxSpreadItem.spreadPercent.toFixed(1)}%`, bold: true }),
-              new TextRun({ text: ` (绝对金额差: ¥${maxSpreadItem.spread.toFixed(2)} /每单位)，需重点关注其品质差异或供应商报价策略。` })
+              new TextRun({ text: ` (绝对金额差: ¥${maxSpreadItem.spread.toFixed(1)} /每单位)，需重点关注其品质差异或供应商报价策略。` })
             ]
           }),
 
@@ -341,7 +341,7 @@ export default function VendorComparisonTab({ entries, vendors }: Props) {
                          <td key={v.id} className={cn("px-6 py-4 text-center border-l border-slate-50", isMin && "bg-emerald-50")}>
                            {vData ? (
                              <div className="flex flex-col items-center">
-                                <span className={cn("font-bold text-sm", isMin ? "text-emerald-600" : "text-slate-700")}>¥{vData.price.toFixed(2)}</span>
+                                <span className={cn("font-bold text-sm", isMin ? "text-emerald-600" : "text-slate-700")}>¥{vData.price.toFixed(1)}</span>
                                 <span className="text-[9px] text-slate-400 mt-0.5">均价</span>
                              </div>
                            ) : (

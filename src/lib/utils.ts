@@ -23,8 +23,8 @@ export function getPeriodName(dateStr: string): string {
 }
 
 export function formatCurrency(amount: number | undefined | null): string {
-  if (amount === undefined || amount === null || isNaN(amount)) return "0.00";
-  return amount.toFixed(2);
+  if (amount === undefined || amount === null || isNaN(amount)) return "0.0";
+  return amount.toFixed(1);
 }
 
 export function toChineseBig(n: number): string {

@@ -148,8 +148,8 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
     let cadreAmount = 0;
     let staffAmount = 0;
     if (allocationTotalCount > 0) {
-      cadreAmount = Number((vendorPaymentAmount * (cadreCount / allocationTotalCount)).toFixed(2));
-      staffAmount = Number((vendorPaymentAmount - cadreAmount).toFixed(2));
+      cadreAmount = Number((vendorPaymentAmount * (cadreCount / allocationTotalCount)).toFixed(1));
+      staffAmount = Number((vendorPaymentAmount - cadreAmount).toFixed(1));
     }
 
     const breakfastTotal = breakfastCount * breakfastSubsidy;
@@ -250,7 +250,7 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
     const data = [
       [`${periodName}职工食堂就餐人员费用分配表`, null, null, null, null, null, null, null],
       ['月份', '总金额（下浮自然月）（元）', '打卡人次（手动录入）', '补贴金额（元）= 总金额', '干部人次', '干部金额（元）', '职工人次', '职工金额（元）'],
-      [periodName, vendorPaymentAmount.toFixed(2), allocationTotalCount, vendorPaymentAmount.toFixed(2), cadreCount, cadreAmount.toFixed(2), staffCount, staffAmount.toFixed(2)],
+      [periodName, vendorPaymentAmount.toFixed(1), allocationTotalCount, vendorPaymentAmount.toFixed(1), cadreCount, cadreAmount.toFixed(1), staffCount, staffAmount.toFixed(1)],
       [null],
       ['分管领导：', null, '办公室主任：', null, '统计：', null, '制表：']
     ];
@@ -308,26 +308,26 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
 
       data.push([
         r.periodName,
-        monthlyTotal.toFixed(2),
-        guestMeals.toFixed(2),
-        basicFee.toFixed(2),
-        rewardPart.toFixed(2),
-        `${satisfaction.toFixed(2)}%`,
-        rewardAmount.toFixed(2),
-        totalFee.toFixed(2)
+        monthlyTotal.toFixed(1),
+        guestMeals.toFixed(1),
+        basicFee.toFixed(1),
+        rewardPart.toFixed(1),
+        `${satisfaction.toFixed(1)}%`,
+        rewardAmount.toFixed(1),
+        totalFee.toFixed(1)
       ]);
     });
 
     // Add Total Row
     data.push([
       '合计',
-      totalMonthlyCumulative.toFixed(2),
-      totalGuestCumulative.toFixed(2),
-      totalBasicCumulative.toFixed(2),
-      totalRewardPartCumulative.toFixed(2),
+      totalMonthlyCumulative.toFixed(1),
+      totalGuestCumulative.toFixed(1),
+      totalBasicCumulative.toFixed(1),
+      totalRewardPartCumulative.toFixed(1),
       '-',
-      totalRewardAmountCumulative.toFixed(2),
-      totalFeeCumulative.toFixed(2)
+      totalRewardAmountCumulative.toFixed(1),
+      totalFeeCumulative.toFixed(1)
     ]);
 
     const ws = XLSX.utils.aoa_to_sheet(data);
@@ -347,21 +347,21 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
       [`职工食堂${periodName}运行情况统计表`, null, null, null, null, null],
       [null, null, null, null, null, `金额单位：（元）`],
       ['项目', null, '人数', '打卡标准', '打卡金额', '补贴金额合计'],
-      ['工作日餐补', '早餐', currentReport.breakfastCount, 0, 0, breakfastTotal.toFixed(2)],
-      [null, '午餐', currentReport.lunchCount, 0, 0, lunchTotal.toFixed(2)],
-      [null, '晚餐', currentReport.dinnerCount, 0, 0, dinnerTotal.toFixed(2)],
-      [null, '合计', currentReport.breakfastCount + currentReport.lunchCount + currentReport.dinnerCount, null, null, mealsTotal.toFixed(2)],
-      ['其他工作人员', '早餐', currentReport.otherBreakfastCount, null, null, currentReport.otherBreakfastAmount?.toFixed(2)],
-      [null, '午餐', currentReport.otherLunchCount, null, null, currentReport.otherLunchAmount?.toFixed(2)],
-      [null, '晚餐', currentReport.otherDinnerCount, null, null, currentReport.otherDinnerAmount?.toFixed(2)],
-      [null, '收款小计', stats.otherTotalCount, null, null, stats.otherTotalAmount.toFixed(2)],
-      ['当月固定支出', '基本餐饮服务费', currentReport.annualContractTotal, (stats.monthlyContractBase).toFixed(2), (stats.serviceFeeIncentivePool).toFixed(2), serviceFeeBasePortion.toFixed(2)],
-      [null, '餐饮服务费奖励', `${currentReport.unhappyCount}人`, null, `${stats.satisfactionRate.toFixed(2)}%`, incentivePayout.toFixed(2)],
-      [null, '客饭服务费', currentReport.guestMealsCount, null, currentReport.guestMealsRate, guestTotal.toFixed(2)],
-      [null, '下浮支付金额', null, null, null, vendorPaymentAmount.toFixed(2)],
-      ['合计', null, null, null, 0, grandTotal.toFixed(2)],
-      ['食堂总支出', amountToChinese(grandTotal), null, null, null, grandTotal.toFixed(2)],
-      ['统计', `1、年度餐饮服务费${currentReport.annualContractTotal}元，月服务费${stats.monthlyContractBase.toFixed(2)}元，其中85%计${serviceFeeBasePortion.toFixed(2)}元为基本餐饮服务费，15%计${stats.serviceFeeIncentivePool.toFixed(2)}按满意度比例奖励，本月全员就餐人数${currentReport.totalStaffCount}人，不满意测评${currentReport.unhappyCount}人，占${(100 - stats.satisfactionRate).toFixed(2)}%，满意度${stats.satisfactionRate.toFixed(2)}%奖励金额${incentivePayout.toFixed(2)}元。 2、伙食补贴金额费用，供货方供货金额${stats.vendorProcurementTotal.toFixed(2)}元，按${stats.vendorPayRate.toFixed(2)}%支付费用共计${vendorPaymentAmount.toFixed(2)}元。 3、其他工作人员缴费人数${stats.otherTotalCount}人次，缴纳金额合计${stats.otherTotalAmount.toFixed(2)}元。`]
+      ['工作日餐补', '早餐', currentReport.breakfastCount, 0, 0, breakfastTotal.toFixed(1)],
+      [null, '午餐', currentReport.lunchCount, 0, 0, lunchTotal.toFixed(1)],
+      [null, '晚餐', currentReport.dinnerCount, 0, 0, dinnerTotal.toFixed(1)],
+      [null, '合计', currentReport.breakfastCount + currentReport.lunchCount + currentReport.dinnerCount, null, null, mealsTotal.toFixed(1)],
+      ['其他工作人员', '早餐', currentReport.otherBreakfastCount, null, null, currentReport.otherBreakfastAmount?.toFixed(1)],
+      [null, '午餐', currentReport.otherLunchCount, null, null, currentReport.otherLunchAmount?.toFixed(1)],
+      [null, '晚餐', currentReport.otherDinnerCount, null, null, currentReport.otherDinnerAmount?.toFixed(1)],
+      [null, '收款小计', stats.otherTotalCount, null, null, stats.otherTotalAmount.toFixed(1)],
+      ['当月固定支出', '基本餐饮服务费', currentReport.annualContractTotal, (stats.monthlyContractBase).toFixed(1), (stats.serviceFeeIncentivePool).toFixed(1), serviceFeeBasePortion.toFixed(1)],
+      [null, '餐饮服务费奖励', `${currentReport.unhappyCount}人`, null, `${stats.satisfactionRate.toFixed(1)}%`, incentivePayout.toFixed(1)],
+      [null, '客饭服务费', currentReport.guestMealsCount, null, currentReport.guestMealsRate, guestTotal.toFixed(1)],
+      [null, '下浮支付金额', null, null, null, vendorPaymentAmount.toFixed(1)],
+      ['合计', null, null, null, 0, grandTotal.toFixed(1)],
+      ['食堂总支出', amountToChinese(grandTotal), null, null, null, grandTotal.toFixed(1)],
+      ['统计', `1、年度餐饮服务费${currentReport.annualContractTotal}元，月服务费${stats.monthlyContractBase.toFixed(1)}元，其中85%计${serviceFeeBasePortion.toFixed(1)}元为基本餐饮服务费，15%计${stats.serviceFeeIncentivePool.toFixed(1)}按满意度比例奖励，本月全员就餐人数${currentReport.totalStaffCount}人，不满意测评${currentReport.unhappyCount}人，占${(100 - stats.satisfactionRate).toFixed(1)}%，满意度${stats.satisfactionRate.toFixed(1)}%奖励金额${incentivePayout.toFixed(1)}元。 2、伙食补贴金额费用，供货方供货金额${stats.vendorProcurementTotal.toFixed(1)}元，按${stats.vendorPayRate.toFixed(1)}%支付费用共计${vendorPaymentAmount.toFixed(1)}元。 3、其他工作人员缴费人数${stats.otherTotalCount}人次，缴纳金额合计${stats.otherTotalAmount.toFixed(1)}元。`]
     ];
 
     const ws = XLSX.utils.aoa_to_sheet(data);
@@ -387,10 +387,10 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
     const avgSubsidy = totalMealsCount > 0 ? mealsTotal / totalMealsCount : 0;
 
     const budgetStatusDesc = isOver 
-      ? `本月餐补基准标准总计为 ${mealsTotal.toFixed(2)} 元，而供应商实际结算金额为 ${vendorPaymentAmount.toFixed(2)} 元，整体呈现“超支”状态，偏差额为 ${diff.toFixed(2)} 元。请相关部门关注采购成本波动。`
-      : `本月餐补基准标准总计为 ${mealsTotal.toFixed(2)} 元，供应商实际结算金额为 ${vendorPaymentAmount.toFixed(2)} 元，整体处于“受控”状态，本月节约预算 ${(Math.abs(diff)).toFixed(2)} 元。`;
+      ? `本月餐补基准标准总计为 ${mealsTotal.toFixed(1)} 元，而供应商实际结算金额为 ${vendorPaymentAmount.toFixed(1)} 元，整体呈现“超支”状态，偏差额为 ${diff.toFixed(1)} 元。请相关部门关注采购成本波动。`
+      : `本月餐补基准标准总计为 ${mealsTotal.toFixed(1)} 元，供应商实际结算金额为 ${vendorPaymentAmount.toFixed(1)} 元，整体处于“受控”状态，本月节约预算 ${(Math.abs(diff)).toFixed(1)} 元。`;
 
-    const perCapitaDesc = `全月早中晚累计保障就餐总人次为 ${totalMealsCount} 人次，平均每餐次补贴标准为 ${avgSubsidy.toFixed(2)} 元。`;
+    const perCapitaDesc = `全月早中晚累计保障就餐总人次为 ${totalMealsCount} 人次，平均每餐次补贴标准为 ${avgSubsidy.toFixed(1)} 元。`;
 
     // Calculate details for meal periods
     const mealDetails = [
@@ -439,7 +439,7 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
           new Paragraph({
             children: [
               new TextRun({ text: "本统计周期内，食堂运行平稳。全月累计总支出金额为 " }),
-              new TextRun({ text: grandTotal.toFixed(2), bold: true, color: "B91C1C" }),
+              new TextRun({ text: grandTotal.toFixed(1), bold: true, color: "B91C1C" }),
               new TextRun({ text: " 元（大写：" }),
               new TextRun({ text: amountToChinese(grandTotal), bold: true }),
               new TextRun({ text: "）。本期结算严格依据合同条款进行，各项扣率及服务费核算准确。" }),
@@ -462,25 +462,25 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: `• 早餐累积：${currentReport.breakfastCount} 人次，总金额 ${breakfastTotal.toFixed(2)} 元` }),
+              new TextRun({ text: `• 早餐累积：${currentReport.breakfastCount} 人次，总金额 ${breakfastTotal.toFixed(1)} 元` }),
             ],
             indent: { left: 720 },
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: `• 午餐累积：${currentReport.lunchCount} 人次，总金额 ${lunchTotal.toFixed(2)} 元` }),
+              new TextRun({ text: `• 午餐累积：${currentReport.lunchCount} 人次，总金额 ${lunchTotal.toFixed(1)} 元` }),
             ],
             indent: { left: 720 },
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: `• 晚餐累积：${currentReport.dinnerCount} 人次，总金额 ${dinnerTotal.toFixed(2)} 元` }),
+              new TextRun({ text: `• 晚餐累积：${currentReport.dinnerCount} 人次，总金额 ${dinnerTotal.toFixed(1)} 元` }),
             ],
             indent: { left: 720 },
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: `• 客饭服务：${currentReport.guestMealsCount} 人次，服务费金额 ${guestTotal.toFixed(2)} 元` }),
+              new TextRun({ text: `• 客饭服务：${currentReport.guestMealsCount} 人次，服务费金额 ${guestTotal.toFixed(1)} 元` }),
             ],
             indent: { left: 720 },
           }),
@@ -489,7 +489,7 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
               new TextRun({ text: `汇总：全月累计保障就餐 `, bold: true }),
               new TextRun({ text: (currentReport.breakfastCount + currentReport.lunchCount + currentReport.dinnerCount).toString(), bold: true, color: "1E40AF" }),
               new TextRun({ text: " 人次，餐补总额 " }),
-              new TextRun({ text: mealsTotal.toFixed(2), bold: true }),
+              new TextRun({ text: mealsTotal.toFixed(1), bold: true }),
               new TextRun({ text: " 元。" }),
             ],
             spacing: { before: 200, after: 200 },
@@ -503,13 +503,13 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
           new Paragraph({
             children: [
               new TextRun({ text: `本月其他工作人员累计就餐 ${stats.otherTotalCount} 人次，共计缴纳伙食费 ` }),
-              new TextRun({ text: stats.otherTotalAmount.toFixed(2), bold: true, color: "047857" }),
+              new TextRun({ text: stats.otherTotalAmount.toFixed(1), bold: true, color: "047857" }),
               new TextRun({ text: " 元。其中：早餐收款 " }),
-              new TextRun({ text: (currentReport.otherBreakfastAmount || 0).toFixed(2) }),
+              new TextRun({ text: (currentReport.otherBreakfastAmount || 0).toFixed(1) }),
               new TextRun({ text: " 元，午餐收款 " }),
-              new TextRun({ text: (currentReport.otherLunchAmount || 0).toFixed(2) }),
+              new TextRun({ text: (currentReport.otherLunchAmount || 0).toFixed(1) }),
               new TextRun({ text: " 元，晚餐收款 " }),
-              new TextRun({ text: (currentReport.otherDinnerAmount || 0).toFixed(2) }),
+              new TextRun({ text: (currentReport.otherDinnerAmount || 0).toFixed(1) }),
               new TextRun({ text: " 元。" }),
             ],
             spacing: { after: 200 },
@@ -528,7 +528,7 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
               new TextRun({ text: " 人。其中不满意测评 " }),
               new TextRun({ text: currentReport.unhappyCount.toString(), bold: true }),
               new TextRun({ text: ` 人，满意度比例为 ` }),
-              new TextRun({ text: stats.satisfactionRate.toFixed(2) + "%", bold: true, color: stats.satisfactionRate >= 90 ? "047857" : "B91C1C" }),
+              new TextRun({ text: stats.satisfactionRate.toFixed(1) + "%", bold: true, color: stats.satisfactionRate >= 90 ? "047857" : "B91C1C" }),
               new TextRun({ text: "。" }),
             ],
             spacing: { before: 200 },
@@ -541,13 +541,13 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: `• 基础服务费（合同额85%）：${serviceFeeBasePortion.toFixed(2)} 元` }),
+              new TextRun({ text: `• 基础服务费（合同额85%）：${serviceFeeBasePortion.toFixed(1)} 元` }),
             ],
             indent: { left: 720 },
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: `• 满意度奖励金（实发部分）：${incentivePayout.toFixed(2)} 元` }),
+              new TextRun({ text: `• 满意度奖励金（实发部分）：${incentivePayout.toFixed(1)} 元` }),
             ],
             indent: { left: 720 },
           }),
@@ -581,8 +581,8 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
                 children: [
                   new TableCell({ children: [new Paragraph({ text: m.name })] }),
                   new TableCell({ children: [new Paragraph({ text: m.count.toString(), alignment: AlignmentType.CENTER })] }),
-                  new TableCell({ children: [new Paragraph({ text: m.total.toFixed(2), alignment: AlignmentType.RIGHT })] }),
-                  new TableCell({ children: [new Paragraph({ text: m.actualCost.toFixed(2), alignment: AlignmentType.RIGHT })] }),
+                  new TableCell({ children: [new Paragraph({ text: m.total.toFixed(1), alignment: AlignmentType.RIGHT })] }),
+                  new TableCell({ children: [new Paragraph({ text: m.actualCost.toFixed(1), alignment: AlignmentType.RIGHT })] }),
                   new TableCell({ children: [new Paragraph({ text: m.shareOfOverspent > 0 ? "超支" : "受控", alignment: AlignmentType.CENTER, children: [new TextRun({ text: m.shareOfOverspent > 0 ? "超支" : "受控", color: m.shareOfOverspent > 0 ? "B91C1C" : "047857" })] })] }),
                 ]
               })),
@@ -621,19 +621,19 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
                     verticalAlign: VerticalAlign.CENTER 
                   }),
                   new TableCell({ 
-                    children: [new Paragraph({ text: stats.cadreAmount.toFixed(2), alignment: AlignmentType.RIGHT })], 
+                    children: [new Paragraph({ text: stats.cadreAmount.toFixed(1), alignment: AlignmentType.RIGHT })], 
                     verticalAlign: VerticalAlign.CENTER 
                   }),
                   new TableCell({ 
-                    children: [new Paragraph({ text: (stats.cadreAmount * bRatio).toFixed(2), alignment: AlignmentType.RIGHT })], 
+                    children: [new Paragraph({ text: (stats.cadreAmount * bRatio).toFixed(1), alignment: AlignmentType.RIGHT })], 
                     verticalAlign: VerticalAlign.CENTER 
                   }),
                   new TableCell({ 
-                    children: [new Paragraph({ text: (stats.cadreAmount * lRatio).toFixed(2), alignment: AlignmentType.RIGHT })], 
+                    children: [new Paragraph({ text: (stats.cadreAmount * lRatio).toFixed(1), alignment: AlignmentType.RIGHT })], 
                     verticalAlign: VerticalAlign.CENTER 
                   }),
                   new TableCell({ 
-                    children: [new Paragraph({ text: (stats.cadreAmount * dRatio).toFixed(2), alignment: AlignmentType.RIGHT })], 
+                    children: [new Paragraph({ text: (stats.cadreAmount * dRatio).toFixed(1), alignment: AlignmentType.RIGHT })], 
                     verticalAlign: VerticalAlign.CENTER 
                   }),
                 ]
@@ -645,19 +645,19 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
                     verticalAlign: VerticalAlign.CENTER 
                   }),
                   new TableCell({ 
-                    children: [new Paragraph({ text: stats.staffAmount.toFixed(2), alignment: AlignmentType.RIGHT })], 
+                    children: [new Paragraph({ text: stats.staffAmount.toFixed(1), alignment: AlignmentType.RIGHT })], 
                     verticalAlign: VerticalAlign.CENTER 
                   }),
                   new TableCell({ 
-                    children: [new Paragraph({ text: (stats.staffAmount * bRatio).toFixed(2), alignment: AlignmentType.RIGHT })], 
+                    children: [new Paragraph({ text: (stats.staffAmount * bRatio).toFixed(1), alignment: AlignmentType.RIGHT })], 
                     verticalAlign: VerticalAlign.CENTER 
                   }),
                   new TableCell({ 
-                    children: [new Paragraph({ text: (stats.staffAmount * lRatio).toFixed(2), alignment: AlignmentType.RIGHT })], 
+                    children: [new Paragraph({ text: (stats.staffAmount * lRatio).toFixed(1), alignment: AlignmentType.RIGHT })], 
                     verticalAlign: VerticalAlign.CENTER 
                   }),
                   new TableCell({ 
-                    children: [new Paragraph({ text: (stats.staffAmount * dRatio).toFixed(2), alignment: AlignmentType.RIGHT })], 
+                    children: [new Paragraph({ text: (stats.staffAmount * dRatio).toFixed(1), alignment: AlignmentType.RIGHT })], 
                     verticalAlign: VerticalAlign.CENTER 
                   }),
                 ]
@@ -674,11 +674,11 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
           new Paragraph({
             children: [
               new TextRun({ text: `本统计周期内，供货方（供应商）实际供货金额累计为 ` }),
-              new TextRun({ text: stats.vendorProcurementTotal.toFixed(2), bold: true }),
+              new TextRun({ text: stats.vendorProcurementTotal.toFixed(1), bold: true }),
               new TextRun({ text: " 元。经审定，依照 " }),
-              new TextRun({ text: stats.vendorPayRate.toFixed(2) + "%", bold: true }),
+              new TextRun({ text: stats.vendorPayRate.toFixed(1) + "%", bold: true }),
               new TextRun({ text: ` 的比例进行货款及下浮费支付，最终应付供货方金额为 ` }),
-              new TextRun({ text: vendorPaymentAmount.toFixed(2), bold: true, color: "B91C1C" }),
+              new TextRun({ text: vendorPaymentAmount.toFixed(1), bold: true, color: "B91C1C" }),
               new TextRun({ text: " 元。" }),
             ],
             spacing: { before: 200 },
@@ -699,7 +699,7 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
           new Paragraph({
             children: [
               new TextRun({ text: `综合测算当月总人均单日成本基准分项值为：`, bold: true }),
-              new TextRun({ text: stats.totalPerCapitaDailyCost.toFixed(2), bold: true, color: "B91C1C", size: 28 }),
+              new TextRun({ text: stats.totalPerCapitaDailyCost.toFixed(1), bold: true, color: "B91C1C", size: 28 }),
               new TextRun({ text: " 元/人·日" }),
             ],
             spacing: { after: 200 },
@@ -714,7 +714,7 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
             new Paragraph({
               children: [
                 new TextRun({ text: `TOP ${idx + 1} - ${item.name}`, bold: true, color: "1E40AF" }),
-                new TextRun({ text: ` (月折后下浮拨付额: ¥${item.totalCostAfterDiscount.toFixed(2)} | 人均日指标负担: ¥${item.perCapitaDailyCost.toFixed(2)} | 月采购结构占比: ${item.costProportion.toFixed(2)}%)` })
+                new TextRun({ text: ` (月折后下浮拨付额: ¥${item.totalCostAfterDiscount.toFixed(1)} | 人均日指标负担: ¥${item.perCapitaDailyCost.toFixed(1)} | 月采购结构占比: ${item.costProportion.toFixed(1)}%)` })
               ],
               indent: { left: 720 },
               spacing: { after: 100 },
@@ -782,28 +782,28 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
               </div>
               <button 
                 onClick={saveReport}
-                className="flex items-center gap-2 bg-emerald-500 text-slate-950 px-5 py-2.5 rounded-xl font-bold hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-900/10 active:scale-95"
+                className="flex items-center gap-2 bg-emerald-500 text-slate-950 px-5 py-2.5 rounded-xl font-bold hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-900/10 active:scale-95 border-2 border-emerald-700"
               >
                 <Save className="w-4 h-4" />
                 保存当前数据
               </button>
               <button 
                 onClick={exportAllocationToExcel}
-                className="flex items-center space-x-2 px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-slate-950 rounded-xl transition-all font-bold shadow-lg shadow-orange-900/10 active:scale-95"
+                className="flex items-center space-x-2 px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-slate-950 rounded-xl transition-all font-bold shadow-lg shadow-orange-900/10 active:scale-95 border-2 border-orange-800"
               >
                 <Download className="h-4 w-4" />
                 <span>导出分配表 Excel</span>
               </button>
               <button 
                 onClick={exportToExcel}
-                className="flex items-center space-x-2 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-slate-950 rounded-xl transition-all font-bold shadow-lg shadow-green-900/10 active:scale-95"
+                className="flex items-center space-x-2 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-slate-950 rounded-xl transition-all font-bold shadow-lg shadow-green-900/10 active:scale-95 border-2 border-green-800"
               >
                 <Download className="h-4 w-4" />
                 <span>运行统计报表</span>
               </button>
               <button 
                 onClick={exportToWord}
-                className="flex items-center gap-2 bg-blue-600 text-slate-950 px-5 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-900/10 active:scale-95"
+                className="flex items-center gap-2 bg-blue-600 text-slate-950 px-5 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-900/10 active:scale-95 border-2 border-blue-800"
               >
                 <FileText className="w-4 h-4" />
                 全新多维度总结报告
@@ -1051,11 +1051,11 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
             <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-lg">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-blue-700 font-medium">满意度百分比：</span>
-                <span className="text-lg font-bold text-blue-900">{stats.satisfactionRate.toFixed(2)}%</span>
+                <span className="text-lg font-bold text-blue-900">{stats.satisfactionRate.toFixed(1)}%</span>
               </div>
               <div className="flex items-center justify-between mt-2">
                 <span className="text-sm text-blue-700 font-medium">奖励金池分摊：</span>
-                <span className="text-sm font-bold text-blue-900">¥{stats.incentivePayout.toFixed(2)} / ¥{stats.serviceFeeIncentivePool.toFixed(2)}</span>
+                <span className="text-sm font-bold text-blue-900">¥{stats.incentivePayout.toFixed(1)} / ¥{stats.serviceFeeIncentivePool.toFixed(1)}</span>
               </div>
             </div>
           </div>
@@ -1079,37 +1079,37 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
                 <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">餐次统计</h4>
                 <div className="flex justify-between items-center text-sm py-2 border-b border-white/5">
                   <span className="text-slate-400">早餐人次 ({currentReport.breakfastCount})</span>
-                  <span className="font-mono">¥{stats.breakfastTotal.toFixed(2)}</span>
+                  <span className="font-mono">¥{stats.breakfastTotal.toFixed(1)}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm py-2 border-b border-white/5">
                   <span className="text-slate-400">午餐人次 ({currentReport.lunchCount})</span>
-                  <span className="font-mono">¥{stats.lunchTotal.toFixed(2)}</span>
+                  <span className="font-mono">¥{stats.lunchTotal.toFixed(1)}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm py-2 border-b border-white/5">
                   <span className="text-slate-400">晚餐人次 ({currentReport.dinnerCount})</span>
-                  <span className="font-mono">¥{stats.dinnerTotal.toFixed(2)}</span>
+                  <span className="font-mono">¥{stats.dinnerTotal.toFixed(1)}</span>
                 </div>
                 <div className="flex justify-between items-center font-bold text-white pt-2">
                   <span>餐补小计</span>
-                  <span className="font-mono">¥{stats.mealsTotal.toFixed(2)}</span>
+                  <span className="font-mono">¥{stats.mealsTotal.toFixed(1)}</span>
                 </div>
                 
                 <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-6 mb-2">其他工作人员 (收款)</h4>
                 <div className="flex justify-between items-center text-sm py-1">
                   <span className="text-slate-400">早餐 ({currentReport.otherBreakfastCount}人次)</span>
-                  <span className="font-mono text-emerald-400">¥{currentReport.otherBreakfastAmount?.toFixed(2)}</span>
+                  <span className="font-mono text-emerald-400">¥{currentReport.otherBreakfastAmount?.toFixed(1)}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm py-1">
                   <span className="text-slate-400">午餐 ({currentReport.otherLunchCount}人次)</span>
-                  <span className="font-mono text-emerald-400">¥{currentReport.otherLunchAmount?.toFixed(2)}</span>
+                  <span className="font-mono text-emerald-400">¥{currentReport.otherLunchAmount?.toFixed(1)}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm py-1 border-b border-white/5 pb-2">
                   <span className="text-slate-400">晚餐 ({currentReport.otherDinnerCount}人次)</span>
-                  <span className="font-mono text-emerald-400">¥{currentReport.otherDinnerAmount?.toFixed(2)}</span>
+                  <span className="font-mono text-emerald-400">¥{currentReport.otherDinnerAmount?.toFixed(1)}</span>
                 </div>
                 <div className="flex justify-between items-center font-bold text-emerald-400 pt-2">
                   <span>收款合计</span>
-                  <span className="font-mono">¥{stats.otherTotalAmount.toFixed(2)}</span>
+                  <span className="font-mono">¥{stats.otherTotalAmount.toFixed(1)}</span>
                 </div>
               </div>
 
@@ -1117,22 +1117,22 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
                 <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">固定支出与奖励</h4>
                 <div className="flex justify-between items-center text-sm py-2 border-b border-white/5">
                   <span className="text-slate-400">月基础服务费 (85%)</span>
-                  <span className="font-mono">¥{stats.serviceFeeBasePortion.toFixed(2)}</span>
+                  <span className="font-mono">¥{stats.serviceFeeBasePortion.toFixed(1)}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm py-2 border-b border-white/5">
                   <div className="flex flex-col">
                     <span className="text-slate-400">满意度绩效奖励</span>
                     <span className="text-[10px] text-green-400">评分: {stats.satisfactionRate.toFixed(1)}%</span>
                   </div>
-                  <span className="font-mono text-green-400">¥{stats.incentivePayout.toFixed(2)}</span>
+                  <span className="font-mono text-green-400">¥{stats.incentivePayout.toFixed(1)}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm py-2 border-b border-white/5">
                   <span className="text-slate-400">客饭服务费合计</span>
-                  <span className="font-mono">¥{stats.guestTotal.toFixed(2)}</span>
+                  <span className="font-mono">¥{stats.guestTotal.toFixed(1)}</span>
                 </div>
                 <div className="flex justify-between items-center font-bold text-white pt-2">
                   <span>服务类小计</span>
-                  <span className="font-mono">¥{(stats.serviceFeeBasePortion + stats.incentivePayout + stats.guestTotal).toFixed(2)}</span>
+                  <span className="font-mono">¥{(stats.serviceFeeBasePortion + stats.incentivePayout + stats.guestTotal).toFixed(1)}</span>
                 </div>
               </div>
             </div>
@@ -1144,9 +1144,9 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
                 <div className="flex items-start justify-between mb-6">
                   <div className="space-y-1">
                     <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest">食材采购结算 (下浮支付)</h4>
-                    <p className="text-[10px] text-slate-400">计算逻辑: 采购原价 ¥{stats.vendorProcurementTotal.toFixed(2)} × 支付比例 {stats.vendorPayRate.toFixed(1)}%</p>
+                    <p className="text-[10px] text-slate-400">计算逻辑: 采购原价 ¥{stats.vendorProcurementTotal.toFixed(1)} × 支付比例 {stats.vendorPayRate.toFixed(1)}%</p>
                   </div>
-                  <div className="text-xl font-mono font-bold text-blue-300">¥{stats.vendorPaymentAmount.toFixed(2)}</div>
+                  <div className="text-xl font-mono font-bold text-blue-300">¥{stats.vendorPaymentAmount.toFixed(1)}</div>
                 </div>
 
                 <div className="pt-6 border-t border-white/10">
@@ -1178,7 +1178,7 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
                   <div className="text-xs text-slate-400 mb-2">综合整体总人均单日食材拨付成本</div>
                   <div className="text-4xl font-mono font-bold text-red-400 flex items-baseline">
                     <span className="text-2xl mr-1">¥</span>
-                    {stats.totalPerCapitaDailyCost.toFixed(2)}
+                    {stats.totalPerCapitaDailyCost.toFixed(1)}
                   </div>
                   <div className="text-[10px] text-slate-500 mt-2 leading-relaxed">基于计算：当前月份下浮后实付成本 ÷<br/>(汇总分配人次 × 对账月自然天数)<br/>*此值将用作 AI 生成智能周菜谱及采购预算预估强约束标准。</div>
                 </div>
@@ -1192,11 +1192,11 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
                         </div>
                         <div>
                           <div className="font-bold text-slate-200 text-sm">{item.name}</div>
-                          <div className="text-[10px] text-slate-400">总体占比: {item.costProportion.toFixed(2)}%</div>
+                          <div className="text-[10px] text-slate-400">总体占比: {item.costProportion.toFixed(1)}%</div>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="font-mono text-emerald-400 font-bold">¥{item.perCapitaDailyCost.toFixed(2)}</div>
+                        <div className="font-mono text-emerald-400 font-bold">¥{item.perCapitaDailyCost.toFixed(1)}</div>
                         <div className="text-[9px] text-slate-500">人/日</div>
                       </div>
                     </div>
@@ -1253,13 +1253,13 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
                   return (
                     <tr key={r.id} className="hover:bg-slate-50 transition-colors">
                       <td className="border border-slate-300 px-4 py-3 text-center font-medium">{r.periodName}</td>
-                      <td className="border border-slate-300 px-4 py-3 text-right font-mono">{monthlyTotal.toFixed(2)}</td>
-                      <td className="border border-slate-300 px-4 py-3 text-right font-mono">{guestMeals.toFixed(2)}</td>
-                      <td className="border border-slate-300 px-4 py-3 text-right font-mono">{basicFee.toFixed(2)}</td>
-                      <td className="border border-slate-300 px-4 py-3 text-right font-mono">{rewardPart.toFixed(2)}</td>
-                      <td className="border border-slate-300 px-4 py-3 text-center text-blue-600 font-bold">{satisfaction.toFixed(2)}%</td>
-                      <td className="border border-slate-300 px-4 py-3 text-right font-mono text-emerald-600 font-bold">{rewardAmount.toFixed(2)}</td>
-                      <td className="border border-slate-300 px-4 py-3 text-right font-mono bg-slate-50 font-bold text-slate-900">{totalFee.toFixed(2)}</td>
+                      <td className="border border-slate-300 px-4 py-3 text-right font-mono">{monthlyTotal.toFixed(1)}</td>
+                      <td className="border border-slate-300 px-4 py-3 text-right font-mono">{guestMeals.toFixed(1)}</td>
+                      <td className="border border-slate-300 px-4 py-3 text-right font-mono">{basicFee.toFixed(1)}</td>
+                      <td className="border border-slate-300 px-4 py-3 text-right font-mono">{rewardPart.toFixed(1)}</td>
+                      <td className="border border-slate-300 px-4 py-3 text-center text-blue-600 font-bold">{satisfaction.toFixed(1)}%</td>
+                      <td className="border border-slate-300 px-4 py-3 text-right font-mono text-emerald-600 font-bold">{rewardAmount.toFixed(1)}</td>
+                      <td className="border border-slate-300 px-4 py-3 text-right font-mono bg-slate-50 font-bold text-slate-900">{totalFee.toFixed(1)}</td>
                     </tr>
                   );
                 })}
@@ -1267,20 +1267,20 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
                 <tr className="bg-slate-100 font-bold">
                   <td className="border border-slate-300 px-4 py-3 text-center">合计</td>
                   <td className="border border-slate-300 px-4 py-3 text-right font-mono">
-                    {reports.reduce((sum, r) => sum + (r.annualContractTotal / 12), 0).toFixed(2)}
+                    {reports.reduce((sum, r) => sum + (r.annualContractTotal / 12), 0).toFixed(1)}
                   </td>
                   <td className="border border-slate-300 px-4 py-3 text-right font-mono">
-                    {reports.reduce((sum, r) => sum + (r.guestMealsCount * r.guestMealsRate), 0).toFixed(2)}
+                    {reports.reduce((sum, r) => sum + (r.guestMealsCount * r.guestMealsRate), 0).toFixed(1)}
                   </td>
                   <td className="border border-slate-300 px-4 py-3 text-right font-mono">
-                    {reports.reduce((sum, r) => sum + (r.annualContractTotal / 12 * 0.85), 0).toFixed(2)}
+                    {reports.reduce((sum, r) => sum + (r.annualContractTotal / 12 * 0.85), 0).toFixed(1)}
                   </td>
                   <td className="border border-slate-300 px-4 py-3 text-right font-mono">
-                    {reports.reduce((sum, r) => sum + (r.annualContractTotal / 12 * 0.15), 0).toFixed(2)}
+                    {reports.reduce((sum, r) => sum + (r.annualContractTotal / 12 * 0.15), 0).toFixed(1)}
                   </td>
                   <td className="border border-slate-300 px-4 py-3 text-center">-</td>
                   <td className="border border-slate-300 px-4 py-3 text-right font-mono text-emerald-600">
-                    {reports.reduce((sum, r) => sum + (r.annualContractTotal / 12 * 0.15 * (r.satisfactionRate / 100)), 0).toFixed(2)}
+                    {reports.reduce((sum, r) => sum + (r.annualContractTotal / 12 * 0.15 * (r.satisfactionRate / 100)), 0).toFixed(1)}
                   </td>
                   <td className="border border-slate-300 px-4 py-3 text-right font-mono bg-slate-200 text-slate-900">
                     {reports.reduce((sum, r) => {
@@ -1290,7 +1290,7 @@ export default function MonthlyReportTab({ entries, reductionRate, reports, onSa
                       const rp = m * 0.15;
                       const ra = rp * (r.satisfactionRate / 100);
                       return sum + (g + b + ra);
-                    }, 0).toFixed(2)}
+                    }, 0).toFixed(1)}
                   </td>
                 </tr>
                 {/* Placeholder rows to match image feel if few reports */}

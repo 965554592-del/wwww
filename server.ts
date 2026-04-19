@@ -118,7 +118,6 @@ async function startServer() {
   app.post('/api/ai/domestic', async (req, res) => {
     const { messages, model, response_format } = req.body;
     
-    // We remove the strict empty-string check since we embedded a highly permissive fallback for the specific user request
     const currentApiKey = process.env.DOMESTIC_AI_API_KEY || 'sk-8mlVkYQHkhcFg4N4gS3DAf0NpSCN9yiWLEwvUIWpc9fBEhnK';
     if (!currentApiKey || currentApiKey === 'not-set') {
       return res.status(503).json({ error: 'Domestic AI is not configured on the server.' });

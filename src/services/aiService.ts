@@ -3,13 +3,10 @@ import { Recipe, RecipeCategory } from "../types";
 
 // Providers Configuration
 const AI_CONFIG = {
-  // We prefer domestic mode if VITE_AI_MODE is set to 'china'
   preferDomestic: import.meta.env.VITE_AI_MODE === 'china'
 };
 
-const geminiAi = new GoogleGenAI({ 
-  apiKey: process.env.GEMINI_API_KEY || '' 
-});
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
 
 export const aiService = {
   /**
@@ -18,7 +15,7 @@ export const aiService = {
   async suggestRecipes(prompt: string, category?: RecipeCategory): Promise<Partial<Recipe>[]> {
     const systemPrompt = `你是一位专业的职工食堂厨师长和营养师。请根据用户的需求推荐菜谱。
 你需要返回一个包含菜名、分类、预估单人成本（元）、打分推荐度（rating，0-5）、营养标签（如：高蛋白、高纤维等）、主要配料和简短说明的列表。
-成本预估应符合中国大众食堂的水平。返回格式必须是 JSON 数组。`;
+成本预估应符合中国大众食堂的水平。所有金额/单价数值必须四舍五入保留小数点后一位。返回格式必须是 JSON 数组。`;
 
     // Try Domestic first if preferred
     if (AI_CONFIG.preferDomestic) {
@@ -50,60 +47,56 @@ export const aiService = {
           }
         }
       } catch (e) {
-        console.error("Domestic AI failed, falling back to Gemini if possible:", e);
+        console.error("Domestic AI failed, falling back to Gemini:", e);
       }
     }
 
-    // Gemini Implementation (Fall-through or if not in China mode)
-    if (process.env.GEMINI_API_KEY) {
-      try {
-        const response = await geminiAi.models.generateContent({
-          model: "gemini-3-flash-preview",
-          contents: prompt,
-          config: {
-            systemInstruction: systemPrompt,
-            responseMimeType: "application/json",
-            responseSchema: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  name: { type: Type.STRING },
-                  category: { 
-                    type: Type.STRING, 
-                    enum: ['staple', 'meat', 'vegetable', 'soup', 'other'] 
-                  },
-                  estimatedCost: { type: Type.NUMBER },
-                  rating: { type: Type.NUMBER },
-                  nutritionTags: { 
-                    type: Type.ARRAY, 
-                    items: { type: Type.STRING } 
-                  },
-                  ingredients: { 
-                    type: Type.ARRAY, 
-                    items: {
-                      type: Type.OBJECT,
-                      properties: {
-                        name: { type: Type.STRING },
-                        amount: { type: Type.STRING }
-                      },
-                      required: ["name"]
-                    }
-                  },
-                  description: { type: Type.STRING }
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: prompt,
+        config: {
+          systemInstruction: systemPrompt,
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                name: { type: Type.STRING },
+                category: { 
+                  type: Type.STRING, 
+                  enum: ['staple', 'meat', 'vegetable', 'soup', 'other'] 
                 },
-                required: ["name", "category", "estimatedCost", "ingredients"]
-              }
+                estimatedCost: { type: Type.NUMBER },
+                rating: { type: Type.NUMBER },
+                nutritionTags: { 
+                  type: Type.ARRAY, 
+                  items: { type: Type.STRING } 
+                },
+                ingredients: { 
+                  type: Type.ARRAY, 
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      name: { type: Type.STRING },
+                      amount: { type: Type.STRING }
+                    },
+                    required: ["name"]
+                  }
+                },
+                description: { type: Type.STRING }
+              },
+              required: ["name", "category", "estimatedCost", "ingredients"]
             }
           }
-        });
-        return JSON.parse(response.text);
-      } catch (e) {
-        console.error("Gemini AI failed:", e);
-      }
+        }
+      });
+      return JSON.parse(response.text || '[]');
+    } catch (e) {
+      console.error("Gemini AI failed:", e);
+      return [];
     }
-
-    return [];
   },
 
   /**
@@ -145,22 +138,19 @@ export const aiService = {
       }
     }
 
-    if (process.env.GEMINI_API_KEY) {
-      try {
-        const response = await geminiAi.models.generateContent({
-          model: "gemini-3-flash-preview",
-          contents: prompt,
-          config: {
-            systemInstruction: systemInstruction,
-          }
-        });
-        return response.text;
-      } catch (e) {
-        console.error("Gemini AI Audit failed:", e);
-      }
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: prompt,
+        config: {
+          systemInstruction: systemInstruction,
+        }
+      });
+      return response.text || "未获获取有效分析建议。";
+    } catch (e) {
+      console.error("Gemini AI Audit failed:", e);
+      return "未配置 AI 服务，请检查 API 密钥。";
     }
-
-    return "未配置 AI 服务，请检查 API 密钥。";
   },
 
   /**
@@ -181,9 +171,10 @@ export const aiService = {
 4. 【特殊时间强制规则】：
    - 粥类（稀饭）绝对只能在早餐出现，午餐和晚餐绝不能包含粥类！
    - 第2天(周二)、第4天(周四)、第5天(周五)的晚餐（下午）：必须固定为【牛肉面 + 牛奶 + 鸡蛋 + 2 样小菜】的特殊配置。
-5. 【专属餐段及类别联动约束】菜品的类别(category)可能标记为多个，如果菜谱自带 \`mealTime\` 属性（如包含 'breakfast' / 'lunch' / 'dinner'），它意味着这个菜最适合在这些餐段出现！如果一个菜的 \`mealTime\` 包含多个餐段（例如同时适合午餐和晚餐），你可以根据预算自由挑选安排到其中一个或多个匹配的餐段。绝对不要把明确只属于其它餐段的菜塞进错误的餐段里。
-6. 【预算约束】每天（三餐之和）所有被选菜品的 estimatedCost 累计，绝不能超过单人预算 ¥${budgetLimit} !
-7. 【匹配约束】你必须只使用传入菜谱库中真实存在的菜品 ID！如果实在无法凑齐完美的餐食结构，请按照【不超过预算、优先清真/素菜】降级处理。绝不能伪造不存在的菜品 ID。`;
+5. 【精度约束】所有返回的金额、成本、预算数值均需四舍五入保留小数点后一位。
+6. 【专属餐段及类别联动约束】菜品的类别(category)可能标记为多个，如果菜谱自带 \`mealTime\` 属性（如包含 'breakfast' / 'lunch' / 'dinner'），它意味着这个菜最适合在这些餐段出现！如果一个菜的 \`mealTime\` 包含多个餐段（例如同时适合午餐和晚餐），你可以根据预算自由挑选安排到其中一个或多个匹配的餐段。绝对不要把明确只属于其它餐段的菜塞进错误的餐段里。
+7. 【预算约束】每天（三餐之和）所有被选菜品的 estimatedCost 累计，绝不能超过单人预算 ¥${budgetLimit} !
+8. 【匹配约束】你必须只使用传入菜谱库中真实存在的菜品 ID！如果实在无法凑齐完美的餐食结构，请按照【不超过预算、优先清真/素菜】降级处理。绝不能伪造不存在的菜品 ID。`;
 
     const inventoryJSON = JSON.stringify(recipes.map(r => ({
       id: r.id, 
@@ -234,25 +225,23 @@ ${inventoryJSON}
       }
     }
 
-    if (process.env.GEMINI_API_KEY) {
-      try {
-        const response = await geminiAi.models.generateContent({
-          model: "gemini-3-flash-preview",
-          contents: prompt,
-          config: {
-            systemInstruction: systemInstruction,
-            responseMimeType: "application/json",
-          }
-        });
-        
-        let content = response.text || "{}";
-        if (content) {
-            content = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-            return JSON.parse(content);
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: prompt,
+        config: {
+          systemInstruction: systemInstruction,
+          responseMimeType: "application/json"
         }
-      } catch (e) {
-        console.error("Gemini AI Menu Generation failed:", e);
+      });
+      
+      let content = response.text || "{}";
+      if (content) {
+          content = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+          return JSON.parse(content);
       }
+    } catch (e) {
+      console.error("Gemini AI Menu Generation failed:", e);
     }
 
     throw new Error("模型调用失败或未找到可用模型");

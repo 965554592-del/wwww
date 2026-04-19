@@ -408,11 +408,11 @@ export default function EntryTab({ entries, addEntry, addEntries, deleteEntry, r
             </div>
             <div>
               <label className="block text-sm font-bold text-slate-800 mb-1">数量 *</label>
-              <input type="number" step="0.01" min="0" required value={quantity} onChange={e => setQuantity(e.target.value === '' ? '' : Number(e.target.value))} className="w-full rounded-md border border-slate-400 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 font-bold" />
+              <input type="number" step="0.1" min="0" required value={quantity} onChange={e => setQuantity(e.target.value === '' ? '' : Number(e.target.value))} className="w-full rounded-md border border-slate-400 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 font-bold" />
             </div>
             <div>
               <label className="block text-sm font-bold text-slate-800 mb-1">单价(元) *</label>
-              <input type="number" step="0.01" min="0" required value={price} 
+              <input type="number" step="0.1" min="0" required value={price} 
                 onChange={e => {
                   setPrice(e.target.value === '' ? '' : Number(e.target.value));
                   setSingleWarningActive(false);
@@ -433,7 +433,7 @@ export default function EntryTab({ entries, addEntry, addEntries, deleteEntry, r
             <div className="lg:col-span-4 flex justify-between items-center mt-2">
               <div className="flex flex-col gap-1">
                 {productName.trim() && referencePrices[productName.trim()] !== undefined && (
-                  <div className="text-xs text-red-700 flex items-center font-black bg-red-100 px-2 py-1 rounded w-fit border border-red-300">
+                  <div className="text-xs text-red-700 flex items-center font-black bg-red-100 px-2 py-1 rounded w-fit border-2 border-red-400 shadow-sm">
                     已开启基准价监控，上限: {formatCurrency(referencePrices[productName.trim()])}
                   </div>
                 )}
@@ -443,7 +443,7 @@ export default function EntryTab({ entries, addEntry, addEntries, deleteEntry, r
                   </div>
                 ) : <div></div>}
               </div>
-              <button type="submit" className={cn("text-slate-950 px-8 py-2.5 rounded-md text-sm font-black transition-all shadow-md shrink-0", singleWarningActive ? "bg-red-700 hover:bg-red-800 ring-4 ring-red-200" : "bg-blue-600 hover:bg-blue-700")}>
+              <button type="submit" className={cn("text-slate-950 px-8 py-2.5 rounded-md text-sm font-black transition-all shadow-md shrink-0 border-2", singleWarningActive ? "bg-red-700 hover:bg-red-800 ring-4 ring-red-200 border-red-900" : "bg-blue-600 hover:bg-blue-700 border-blue-800")}>
                 {singleWarningActive ? '价格严重超标，确认强制录入' : '立即保存单据'}
               </button>
             </div>
@@ -460,10 +460,10 @@ export default function EntryTab({ entries, addEntry, addEntries, deleteEntry, r
                   <span className="font-semibold text-[#1e293b]">提示：</span>您正在使用连续录入功能。您可以一次性添加同一天的多个采购条目，完成后点击“批量提交”。
                 </div>
                 <div className="flex items-center gap-2">
-                  <button onClick={downloadTemplate} className="flex items-center gap-1 text-[#2563eb] hover:bg-blue-50 px-2 py-1 rounded transition-colors" title="下载Excel导入模板">
+                  <button onClick={downloadTemplate} className="flex items-center gap-1 text-[#2563eb] hover:bg-blue-50 px-2 py-1 rounded border border-blue-300 transition-colors" title="下载Excel导入模板">
                     <Download className="w-4 h-4" /> 模板下载
                   </button>
-                  <label className="flex items-center gap-1 text-[#10b981] hover:bg-emerald-50 px-2 py-1 rounded transition-colors cursor-pointer" title="导入Excel文件快速填充表格">
+                  <label className="flex items-center gap-1 text-[#10b981] hover:bg-emerald-50 px-2 py-1 rounded border border-emerald-300 transition-colors cursor-pointer" title="导入Excel文件快速填充表格">
                     <Upload className="w-4 h-4" /> 导入明细
                     <input type="file" accept=".xlsx,.xls" className="hidden" ref={fileInputRef} onChange={handleFileUpload} />
                   </label>
@@ -492,9 +492,15 @@ export default function EntryTab({ entries, addEntry, addEntries, deleteEntry, r
                     const isWarning = bulkWarnings.has(index);
                     const trimmedName = item.productName.trim();
                     const refPrice = trimmedName ? referencePrices[trimmedName] : undefined;
+                    const isOverPrice = refPrice !== undefined && typeof item.price === 'number' && item.price > refPrice;
                     
                     return (
-                      <tr key={item.id} className={cn("border-b transition-colors", isWarning ? "bg-red-100 border-red-400" : "border-slate-300 hover:bg-slate-100")}>
+                      <tr key={item.id} className={cn(
+                        "border-b transition-colors", 
+                        isWarning ? "bg-red-100 border-red-400" : 
+                        isOverPrice ? "bg-amber-50/50 border-amber-200" :
+                        "border-slate-300 hover:bg-slate-100"
+                      )}>
                         <td className="px-3 py-2 text-center text-xs text-slate-600 align-top pt-3.5 font-black">{index + 1}</td>
                         <td className="px-3 py-2 align-top pt-2">
                           <select 
@@ -518,10 +524,10 @@ export default function EntryTab({ entries, addEntry, addEntries, deleteEntry, r
                           )}
                         </td>
                         <td className="px-3 py-2 align-top pt-2">
-                          <input type="number" step="0.01" min="0" className={cn("w-full rounded border px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600 font-black", isWarning ? "border-red-600 bg-white" : "border-slate-400")} value={item.quantity} onChange={e => handleBulkItemChange(index, 'quantity', e.target.value === '' ? '' : Number(e.target.value))} placeholder="0.00" />
+                          <input type="number" step="0.1" min="0" className={cn("w-full rounded border px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600 font-black", isWarning ? "border-red-600 bg-white" : "border-slate-400")} value={item.quantity} onChange={e => handleBulkItemChange(index, 'quantity', e.target.value === '' ? '' : Number(e.target.value))} placeholder="0.0" />
                         </td>
                         <td className="px-3 py-2 align-top pt-2">
-                          <input type="number" step="0.01" min="0" className={cn("w-full rounded border px-2 py-1 text-sm focus:outline-none focus:ring-1 font-black", isWarning ? "border-red-700 ring-2 ring-red-700 bg-red-100 text-red-800" : "border-slate-400 focus:ring-blue-600")} value={item.price} onChange={e => handleBulkItemChange(index, 'price', e.target.value === '' ? '' : Number(e.target.value))} placeholder="0.00" />
+                          <input type="number" step="0.1" min="0" className={cn("w-full rounded border px-2 py-1 text-sm focus:outline-none focus:ring-1 font-black", isWarning ? "border-red-700 ring-2 ring-red-700 bg-red-100 text-red-800" : "border-slate-400 focus:ring-blue-600")} value={item.price} onChange={e => handleBulkItemChange(index, 'price', e.target.value === '' ? '' : Number(e.target.value))} placeholder="0.0" />
                           {refPrice !== undefined && (
                             <div className="text-[11px] mt-1 whitespace-nowrap font-black text-red-700">
                               监控上限: {formatCurrency(refPrice)}
@@ -553,7 +559,7 @@ export default function EntryTab({ entries, addEntry, addEntries, deleteEntry, r
             
             <div className="flex justify-between items-center mt-2">
               <div className="flex items-center gap-6">
-                <button type="button" onClick={() => setBulkItems([...bulkItems, createEmptyBulkItem(vendors.find(v => v.isPreferred)?.id || (vendors[0]?.id) || '')])} className="flex items-center gap-1 text-blue-800 text-sm font-black hover:text-blue-900 transition-colors uppercase tracking-wider">
+                <button type="button" onClick={() => setBulkItems([...bulkItems, createEmptyBulkItem(vendors.find(v => v.isPreferred)?.id || (vendors[0]?.id) || '')])} className="flex items-center gap-1 text-blue-800 text-sm font-black hover:text-blue-900 transition-colors uppercase tracking-wider bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-400">
                   <Plus className="w-5 h-5" /> 增加一行
                 </button>
                 {currentBulkTotal > 0 && (
@@ -568,7 +574,7 @@ export default function EntryTab({ entries, addEntry, addEntries, deleteEntry, r
                     <AlertCircle className="w-5 h-5 mr-1.5" /> ⚠️ 部分商品价格异常
                   </div>
                 )}
-                <button onClick={handleBulkSubmit} className={cn("text-slate-950 px-8 py-3 rounded-md text-sm font-black transition-all shadow-lg active:scale-95", bulkWarningActive ? "bg-red-700 hover:bg-red-800 ring-4 ring-red-200" : "bg-blue-600 hover:bg-blue-700")}>
+                <button onClick={handleBulkSubmit} className={cn("text-slate-950 px-8 py-3 rounded-md text-sm font-black transition-all shadow-lg active:scale-95 border-2", bulkWarningActive ? "bg-red-700 hover:bg-red-800 ring-4 ring-red-200 border-red-900" : "bg-blue-600 hover:bg-blue-700 border-blue-800")}>
                   {bulkWarningActive ? `价格超标，再次点击强制提交 (${bulkItems.length}笔)` : `保存批量录入记录 (${bulkItems.length}笔)`}
                 </button>
               </div>

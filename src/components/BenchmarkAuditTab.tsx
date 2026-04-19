@@ -58,7 +58,7 @@ export default function BenchmarkAuditTab({ entries }: Props) {
         r.unit,
         r.price,
         r.refPriceAtEntry || '-',
-        r.refPriceAtEntry ? r.diff.toFixed(2) : '-',
+        r.refPriceAtEntry ? r.diff.toFixed(1) : '-',
         r.refPriceAtEntry ? r.diffPercent.toFixed(1) + '%' : '-',
         r.isOver ? '超过基准' : (r.refPriceAtEntry ? '合规' : '未设基准'),
         r.periodName

@@ -442,7 +442,7 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
                   <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
                     <div className="flex flex-col">
                       <span className="text-[10px] font-black text-slate-400 uppercase">预估成本</span>
-                      <span className="text-lg font-black text-indigo-600">¥ {(recipe.estimatedCost || 0).toFixed(2)} /人</span>
+                      <span className="text-lg font-black text-indigo-600">¥ {(recipe.estimatedCost || 0).toFixed(1)} /人</span>
                     </div>
                     <div className="text-xs font-bold text-slate-400">
                       {recipe.ingredients.length} 种配料
@@ -584,14 +584,14 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
                    <button 
                      onClick={autoGenerateMenu}
                      disabled={isGeneratingMenu}
-                     className="bg-indigo-600 text-white px-6 py-4 rounded-2xl font-black text-sm hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200 flex items-center gap-2 group active:scale-95 disabled:opacity-50 disabled:scale-100"
+                     className="bg-indigo-600 text-white px-6 py-4 rounded-2xl font-black text-sm hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200 flex items-center gap-2 group active:scale-95 disabled:opacity-50 disabled:scale-100 border-2 border-indigo-800"
                    >
                      {isGeneratingMenu ? <Loader2 className="w-5 h-5 animate-spin" /> : <Zap className="w-5 h-5 group-hover:animate-pulse" />}
                      {isGeneratingMenu ? 'AI 严格排菜中' : '自动生成周谱'}
                    </button>
                    <button 
                      onClick={saveDraftMenu}
-                     className="bg-emerald-500 text-white px-6 py-4 rounded-2xl font-black text-sm hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-200 flex items-center gap-2 active:scale-95"
+                     className="bg-emerald-500 text-white px-6 py-4 rounded-2xl font-black text-sm hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-200 flex items-center gap-2 active:scale-95 border-2 border-emerald-700"
                    >
                      <Save className="w-5 h-5" />
                      保存锁定周谱
@@ -606,14 +606,14 @@ export default function RecipeMenuTab({ recipes, weeklyMenus, onSaveRecipe, onDe
                 <button 
                   onClick={handleAIAudit}
                   disabled={isAIThinking}
-                  className="p-3 bg-indigo-100 text-indigo-600 rounded-2xl hover:bg-indigo-200 transition-all flex items-center gap-2 font-black text-xs active:scale-95 disabled:opacity-50" 
+                  className="p-3 bg-indigo-100 text-indigo-600 rounded-2xl hover:bg-indigo-200 transition-all flex items-center gap-2 font-black text-xs active:scale-95 disabled:opacity-50 border-2 border-indigo-300" 
                   title="AI 营养与预算审计"
                 >
                   {isAIThinking ? <Loader2 className="w-5 h-5 animate-spin" /> : <BrainCircuit className="w-5 h-5" />}
                   AI 审计周谱
                 </button>
-                <button className="p-3 bg-slate-100 text-slate-600 rounded-2xl hover:bg-slate-200 transition-all" title="打印菜谱"><Printer className="w-5 h-5" /></button>
-                <button className="p-3 bg-slate-100 text-slate-600 rounded-2xl hover:bg-slate-200 transition-all" title="下载导出"><Download className="w-5 h-5" /></button>
+                <button className="p-3 bg-slate-100 text-slate-600 rounded-2xl hover:bg-slate-200 transition-all border-2 border-slate-300" title="打印菜谱"><Printer className="w-5 h-5" /></button>
+                <button className="p-3 bg-slate-100 text-slate-600 rounded-2xl hover:bg-slate-200 transition-all border-2 border-slate-300" title="下载导出"><Download className="w-5 h-5" /></button>
               </div>
             </div>
           </div>

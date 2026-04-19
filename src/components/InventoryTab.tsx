@@ -194,8 +194,8 @@ export default function InventoryTab({ entries, reductionRate }: InventoryTabPro
     
     const startDateStr = `${startYear}年${startMonth}月26日`;
     const endDateStr = `${year}年${month}月25日`;
-    const totalAmountStr = totalInAmt.toFixed(2);
-    const paidAmountStr = invoiceAmount.toFixed(2);
+    const totalAmountStr = totalInAmt.toFixed(1);
+    const paidAmountStr = invoiceAmount.toFixed(1);
     const paidAmountBig = toChineseBig(invoiceAmount);
 
     const doc = new Document({
@@ -521,17 +521,17 @@ export default function InventoryTab({ entries, reductionRate }: InventoryTabPro
                     <td className="px-5 py-4 font-black text-slate-900">{row.productName}</td>
                     <td className="px-5 py-4 text-slate-700 font-bold">{row.unit}</td>
                     
-                    <td className="px-3 py-4 text-center border-l-2 border-slate-200 font-bold">{row.prevBalanceQty.toFixed(2)}</td>
+                    <td className="px-3 py-4 text-center border-l-2 border-slate-200 font-bold">{row.prevBalanceQty.toFixed(1)}</td>
                     <td className="px-3 py-4 text-right font-bold text-slate-700">{formatCurrency(row.prevBalanceAmt)}</td>
                     
-                    <td className="px-3 py-4 text-center border-l-2 border-slate-200 font-black text-blue-800">{row.inQty.toFixed(2)}</td>
+                    <td className="px-3 py-4 text-center border-l-2 border-slate-200 font-black text-blue-800">{row.inQty.toFixed(1)}</td>
                     <td className="px-3 py-4 text-right font-bold">{formatCurrency(row.price)}</td>
                     <td className="px-3 py-4 text-right font-black text-blue-900">{formatCurrency(row.inAmt)}</td>
                     
-                    <td className="px-3 py-4 text-center border-l-2 border-slate-200 font-black text-amber-800">{row.outQty.toFixed(2)}</td>
+                    <td className="px-3 py-4 text-center border-l-2 border-slate-200 font-black text-amber-800">{row.outQty.toFixed(1)}</td>
                     <td className="px-3 py-4 text-right font-black text-amber-900">{formatCurrency(row.outAmt)}</td>
                     
-                    <td className="px-3 py-4 text-center border-l-2 border-slate-200 font-black text-teal-800">{row.balanceQty.toFixed(2)}</td>
+                    <td className="px-3 py-4 text-center border-l-2 border-slate-200 font-black text-teal-800">{row.balanceQty.toFixed(1)}</td>
                     <td className="px-3 py-4 text-right font-black text-teal-900">{formatCurrency(row.balanceAmt)}</td>
                   </tr>
                 ))}
@@ -576,9 +576,9 @@ export default function InventoryTab({ entries, reductionRate }: InventoryTabPro
                       </div>
                     </td>
                     <td className="px-6 py-5 text-slate-700 font-bold">{row.unit}</td>
-                    <td className="px-6 py-5 text-right font-black text-blue-800">{row.inQty.toFixed(2)}</td>
+                    <td className="px-6 py-5 text-right font-black text-blue-800">{row.inQty.toFixed(1)}</td>
                     <td className="px-6 py-5 text-right font-black text-blue-900 text-base underline decoration-2 decoration-blue-200">{formatCurrency(row.inAmt)}</td>
-                    <td className="px-6 py-5 text-right font-black text-amber-800">{row.outQty.toFixed(2)}</td>
+                    <td className="px-6 py-5 text-right font-black text-amber-800">{row.outQty.toFixed(1)}</td>
                     <td className="px-6 py-5 text-right font-black text-amber-900">{formatCurrency(row.outAmt)}</td>
                   </tr>
                 ))}
